@@ -1,0 +1,13 @@
+[
+  {
+    "date": "2026-06-06",
+    "energy_current": 400,
+    "energy_total": 1000,
+    "nodes_status": {
+      "1": {
+        "status": "completed",
+        "achievement_date": 46154.0
+      }
+    }
+  }
+]
