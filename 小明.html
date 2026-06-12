@@ -13,12 +13,7 @@
       min-height: 100vh;
       position: relative;
     }
-    body {
-      background-image: var(--custom-bg);
-      background-size: cover;
-      background-attachment: fixed;
-      background-position: center;
-    }
+    body { background-image: var(--custom-bg); background-size: cover; background-attachment: fixed; background-position: center; }
     .forest {
       max-width: 550px;
       margin: 0 auto;
@@ -31,6 +26,7 @@
     .forest-header {
       text-align: center;
       margin-bottom: 20px;
+      position: relative;
     }
     .avatar {
       width: 64px;
@@ -46,6 +42,15 @@
       font-size: 24px;
       color: #2e7d32;
       text-shadow: 0 1px 1px white;
+    }
+    .title-prefix {
+      font-size: 20px;
+      background: linear-gradient(135deg, #ffb347, #ff8c00);
+      display: inline-block;
+      padding: 2px 12px;
+      border-radius: 40px;
+      margin-right: 8px;
+      color: white;
     }
     .theme-story {
       font-size: 13px;
@@ -91,6 +96,14 @@
       color: #2e7d32;
       font-weight: bold;
     }
+    .total-title {
+      font-size: 10px;
+      background: #ffe0b5;
+      border-radius: 20px;
+      padding: 2px 6px;
+      margin-top: 4px;
+      color: #b45f06;
+    }
     .tree-list {
       display: flex;
       flex-direction: column;
@@ -104,53 +117,20 @@
       padding: 16px;
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
+      align-items: flex-start;
       gap: 16px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .tree-img-container {
       position: relative;
-      width: 180px;   /* 增大容器宽度，让图片显示更大 */
+      width: 180px;
       flex-shrink: 0;
     }
     .tree-bg {
       width: 100%;
       height: auto;
       display: block;
-    }
-    .fruit-layer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-    .fruit {
-      position: absolute;
-      width: 28px;
-      height: 28px;
-      background: #ffc107;
-      border-radius: 50%;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      cursor: pointer;
-      pointer-events: auto;
-      transition: transform 0.2s;
-      transform: translate(-50%, -50%);
-      /* 不加任何文字 */
-    }
-    .fruit:hover {
-      transform: translate(-50%, -50%) scale(1.15);
-      background: #ff9800;
-    }
-    .fruit.pulse {
-      animation: breathe 1.5s ease-in-out infinite;
-      box-shadow: 0 0 0 0 rgba(255,100,0,0.7);
-    }
-    @keyframes breathe {
-      0% { box-shadow: 0 0 0 0 rgba(255,100,0,0.7); transform: translate(-50%, -50%) scale(1); }
-      70% { box-shadow: 0 0 0 10px rgba(255,100,0,0); transform: translate(-50%, -50%) scale(1.05); }
-      100% { box-shadow: 0 0 0 0 rgba(255,100,0,0); transform: translate(-50%, -50%) scale(1); }
+      border-radius: 20px;
     }
     .tree-info {
       flex: 1;
@@ -161,23 +141,89 @@
       font-weight: bold;
       color: #3e2723;
       margin-bottom: 6px;
-    }
-    .dino-intro {
-      font-size: 13px;
-      color: #5d4037;
-      background: #fff9c4;
-      padding: 6px 10px;
-      border-radius: 20px;
-      margin-top: 8px;
-      line-height: 1.4;
-    }
-    .progress-badge {
-      font-size: 13px;
-      background: #e0f2f1;
       display: inline-block;
-      padding: 4px 12px;
+    }
+    .category-title {
+      font-size: 14px;
+      background: #ffe0b5;
+      display: inline-block;
+      padding: 4px 10px;
       border-radius: 30px;
-      margin-top: 8px;
+      font-weight: bold;
+      float: right;
+    }
+    /* 水平收集槽 */
+    .slot-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+    .slot-item {
+      width: 44px;
+      height: 44px;
+      background: #f5f5dc;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .slot-item.unlocked {
+      background: #ffd966;
+      border: 2px solid #ffb347;
+    }
+    .slot-item.current {
+      background: #ffb347;
+      animation: pulseGold 1.2s infinite;
+      box-shadow: 0 0 0 4px rgba(255,180,0,0.5);
+    }
+    .slot-item.locked {
+      background: #ccc;
+      color: #888;
+      cursor: pointer;
+    }
+    @keyframes pulseGold {
+      0% { transform: scale(1); background: #ffb347; }
+      50% { transform: scale(1.05); background: #ffa500; }
+      100% { transform: scale(1); background: #ffb347; }
+    }
+    .slot-item:hover {
+      transform: scale(1.08);
+    }
+    /* 图鉴按钮 */
+    .encyclopedia-btn {
+      background: #9c27b0;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .knowledge-list {
+      margin-top: 12px;
+    }
+    .knowledge-item {
+      font-size: 14px;
+      padding: 6px 8px;
+      background: #fff9c4;
+      margin-bottom: 6px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .knowledge-item:hover {
+      background: #ffecb3;
     }
     .gallery {
       margin-top: 20px;
@@ -251,25 +297,53 @@
     .modal {
       display: none;
       position: fixed;
-      top:0; left:0; width:100%; height:100%;
-      background: rgba(0,0,0,0.6);
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background: rgba(0,0,0,0.8);
       justify-content: center;
       align-items: center;
       z-index: 2000;
+      overflow: auto;
     }
     .modal-card {
       background: white;
       border-radius: 32px;
       padding: 20px;
       width: 90%;
-      max-width: 400px;
+      max-width: 500px;
       max-height: 80vh;
       overflow-y: auto;
+      text-align: center;
     }
     .modal-close {
       float: right;
       font-size: 28px;
       cursor: pointer;
+    }
+    /* 只针对蛋图标的抖动动画 */
+    .egg-shake {
+      display: inline-block;
+      animation: eggShake 0.4s ease-in-out;
+      font-size: 48px;
+    }
+    @keyframes eggShake {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(5px, -5px) rotate(5deg); }
+      50% { transform: translate(-5px, 3px) rotate(-5deg); }
+      75% { transform: translate(3px, -2px) rotate(3deg); }
+      100% { transform: translate(0, 0) rotate(0); }
+    }
+    .new-dino-img {
+      width: 150px;
+      border-radius: 20px;
+      margin: 10px auto;
+    }
+    .dino-intro {
+      text-align: left;
+      margin-top: 16px;
+      line-height: 1.5;
     }
     .login-overlay {
       position: fixed;
@@ -298,18 +372,16 @@
     <div class="pie-container">
       <canvas id="pieChart" width="80" height="80"></canvas>
       <div class="pie-label">总体进度</div>
+      <div class="total-title">🌳 智慧之树</div>
     </div>
-
     <div class="forest">
       <div class="forest-header">
         <div class="avatar"><img src="https://example.com/avatar_xiaoming.png"></div>
-        <h1>小明的知识森林</h1>
+        <h1><span class="title-prefix">🌳 智慧之树</span> 小明的知识森林</h1>
         <div class="theme-story">📖 🦕 在恐龙岛上，每学会一个技能就能唤醒一只小恐龙，快收集你的恐龙伙伴吧！</div>
-        <div class="guide-text">✨ 快去点击树冠上的小圆点查看学习记录吧~~ ✨</div>
+        <div class="guide-text">✨ 点击金色恐龙蛋，孵化新角色！ ✨</div>
       </div>
-
       <div class="tree-list" id="treeList"></div>
-
       
       <div class="gallery">
         <strong>🎨 我的画廊</strong>
@@ -319,18 +391,13 @@
       </div>
       
     </div>
-
     <div class="control-bar">
       <div class="ctrl-btn" onclick="changeBg()">🖼️ 换背景</div>
       <div class="ctrl-btn" onclick="toggleMusic()">🎵 音乐开关</div>
       <div class="ctrl-btn" onclick="generateShareCard()">📸 分享卡</div>
     </div>
-
     <div class="secret-letter" onclick="toggleLetter()">✉️</div>
-    <div class="letter-content" id="letterContent">
-      <strong>📬 老师悄悄话</strong><br>小明妈妈您好，小明最近在循环和列表方面进步很大，尤其独立完成了创意项目，值得表扬！
-    </div>
-
+    <div class="letter-content" id="letterContent"><strong>📬 老师悄悄话</strong><br>小明妈妈您好，小明最近在循环和列表方面进步很大，尤其独立完成了创意项目，值得表扬！</div>
     <div class="modal" id="fruitModal">
       <div class="modal-card">
         <span class="modal-close" onclick="closeModal()">&times;</span>
@@ -338,11 +405,10 @@
       </div>
     </div>
   </div>
-
   <audio id="bgMusic" loop src="https://example.com/music/dino.mp3" style="display:none;"></audio>
+  <audio id="eggSound" preload="auto" src="data:audio/wav;base64,U3RlcmVvZGF0YQ==" style="display:none;"></audio>
 
   <script>
-    // 登录逻辑
     const pagePwd = "1234";
     if (sessionStorage.getItem('forest_login') === 'true') {
       document.getElementById('loginOverlay').style.display = 'none';
@@ -360,12 +426,12 @@
       }
     }
 
-    const categories = [{"img_url": "../images/dinosaur/\u57fa\u7840\u8bed\u6cd5.png", "learned": 3, "learned_details": [{"detail": {"achievement_date": "2026-05-01", "gif_url": null, "highlight": "\u7b2c\u4e00\u6b21\u7528\u53d8\u91cf\u8ba1\u7b97\u81ea\u5df1\u7684\u5e74\u9f84\u5e76\u6253\u5370\u51fa\u6765\u3002", "highlight_img": NaN, "knowledge": "\u5b66\u4f1a\u4e86\u4f7f\u7528print\u8f93\u51fa\u6587\u672c\uff0c\u5b9a\u4e49\u53d8\u91cf\u5b58\u50a8\u6570\u636e\u3002", "mistake": "\u5fd8\u8bb0\u52a0\u5f15\u53f7\u5bfc\u81f4\u8bed\u6cd5\u9519\u8bef\u3002", "mistake_monster_img": null, "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u5b66\u4f1a\u4e86\u8bf4\u8bdd\uff0c\u5b83\u558a\u51fa\u4e86\u201cHello World\u201d\u3002", "title": "print()\u548c\u53d8\u91cf", "voice_url": "https://example.com/voice/print.mp3"}, "id": 1, "short_title": "\u6253\u5370\u53d8\u91cf", "status": "completed"}, {"detail": {"achievement_date": "2026-05-03", "gif_url": null, "highlight": "\u7f16\u5199\u4e86\u95ee\u7b54\u7a0b\u5e8f\uff0c\u56de\u7b54\u4e86\u6050\u9f99\u7684\u95ee\u9898\u3002", "highlight_img": NaN, "knowledge": "\u638c\u63e1input\u83b7\u53d6\u7528\u6237\u8f93\u5165\uff0c\u5e76\u8f6c\u6362\u4e3a\u5b57\u7b26\u4e32\u3002", "mistake": "\u8f93\u5165\u7684\u6570\u5b57\u6ca1\u6709\u8f6cint\u5bfc\u81f4\u62a5\u9519\u3002", "mistake_monster_img": null, "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u95ee\u4f60\u53eb\u4ec0\u4e48\u540d\u5b57\uff0c\u4f60\u56de\u7b54\u540e\u5b83\u5f88\u5f00\u5fc3\u3002", "title": "input()", "voice_url": NaN}, "id": 2, "short_title": "\u8f93\u5165\u51fd\u6570", "status": "completed"}, {"detail": {"achievement_date": "2026-05-11", "gif_url": null, "highlight": "\u8ba1\u7b97\u4e86\u4e24\u4e2a\u6570\u5b57\u7684\u548c\uff0c\u5e76\u6b63\u786e\u8f93\u51fa\u3002", "highlight_img": NaN, "knowledge": "\u5b66\u4e60int()\u5c06\u5b57\u7b26\u4e32\u8f6c\u4e3a\u6574\u6570\uff0c\u7528\u4e8e\u6570\u5b66\u8fd0\u7b97\u3002", "mistake": "\u8f6c\u6362\u975e\u6570\u5b57\u5b57\u7b26\u4e32\u62a5\u9519\u3002", "mistake_monster_img": null, "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u5b66\u4f1a\u4e86\u6570\u6570\uff0c\u80fd\u5e2e\u5fd9\u8ba1\u7b97\u6c34\u679c\u6570\u91cf\u3002", "title": "int()", "voice_url": NaN}, "id": 6, "short_title": "\u7c7b\u578b\u8f6c\u6362", "status": "completed"}], "name": "\u57fa\u7840\u8bed\u6cd5", "style": {"name": "\u5c0f\u6a61\u6811"}, "total": 3}, {"img_url": "../images/dinosaur/\u6761\u4ef6\u5224\u65ad.png", "learned": 2, "learned_details": [{"detail": {"achievement_date": "2026-05-05", "gif_url": null, "highlight": "\u7528if\u5224\u65ad\u6050\u9f99\u662f\u5426\u5403\u9971\uff0c\u8f93\u51fa\u4e0d\u540c\u7ed3\u679c\u3002", "highlight_img": "https://example.com/gif/if_dino.gif", "knowledge": "\u7406\u89e3if\u6761\u4ef6\u5224\u65ad\uff0c\u6839\u636e\u6761\u4ef6\u6267\u884c\u4e0d\u540c\u4ee3\u7801\u3002", "mistake": "\u5fd8\u8bb0\u5192\u53f7\u3002", "mistake_monster_img": null, "mistake_video": NaN, "story": "\u5982\u679c\u6050\u9f99\u997f\u4e86\uff0c\u5c31\u7ed9\u5b83\u5582\u98df\u3002", "title": "if", "voice_url": NaN}, "id": 3, "short_title": "if\u5224\u65ad", "status": "completed"}, {"detail": {"achievement_date": "2026-05-09", "gif_url": null, "highlight": "\u7f16\u5199\u4e86\u6050\u9f99\u731c\u62f3\u6e38\u620f\uff0c\u8d62\u4e86\u6709\u5956\u52b1\u3002", "highlight_img": NaN, "knowledge": "\u638c\u63e1if-else\u53cc\u5206\u652f\u7ed3\u6784\u3002", "mistake": "else\u540e\u9762\u52a0\u6761\u4ef6\u3002", "mistake_monster_img": null, "mistake_video": NaN, "story": "\u6050\u9f99\u548c\u4f60\u731c\u62f3\uff0c\u4f60\u8d62\u4e86\u5b83\u4f1a\u8df3\u821e\u3002", "title": "if-else", "voice_url": NaN}, "id": 5, "short_title": "if-else", "status": "completed"}], "name": "\u6761\u4ef6\u5224\u65ad", "style": {"name": "\u67ab\u6811"}, "total": 3}, {"img_url": "../images/dinosaur/\u5faa\u73af.png", "learned": 2, "learned_details": [{"detail": {"achievement_date": "2026-05-17", "gif_url": null, "highlight": "\u7528for\u5faa\u73af\u753b\u51fa\u4e86\u87ba\u65cb\u7ebf\u3002", "highlight_img": "https://example.com/gif/spiral.gif", "knowledge": "\u638c\u63e1for\u5faa\u73af\u904d\u5386\u5e8f\u5217\u3002", "mistake": "range\u53c2\u6570\u5199\u9519\u3002", "mistake_monster_img": null, "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u6559\u4f60\u7528\u5faa\u73af\u6316\u5b9d\u77f3\uff0c\u6316\u4e86\u4e09\u5708\u3002", "title": "for\u5faa\u73af", "voice_url": NaN}, "id": 9, "short_title": "for\u5faa\u73af", "status": "completed"}, {"detail": {"achievement_date": "2026-05-19", "gif_url": null, "highlight": "\u7528for+if\u627e\u51fa\u4e86\u5217\u8868\u4e2d\u7684\u5076\u6570\u3002", "highlight_img": NaN, "knowledge": "\u5728\u5faa\u73af\u4e2d\u4f7f\u7528\u6761\u4ef6\u5224\u65ad\uff0c\u7b5b\u9009\u6570\u636e\u3002", "mistake": "\u7f29\u8fdb\u9519\u8bef\u5bfc\u81f4\u903b\u8f91\u6df7\u4e71\u3002", "mistake_monster_img": null, "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u8bf7\u4f60\u5e2e\u5fd9\u4ece\u4e00\u5806\u5b9d\u77f3\u4e2d\u6311\u51fa\u7ea2\u5b9d\u77f3\u3002", "title": "for\u5faa\u73af\u548cif\u5d4c\u5957", "voice_url": NaN}, "id": 10, "short_title": "for+if\u5d4c\u5957", "status": "current"}], "name": "\u5faa\u73af", "style": {"name": "\u677e\u6811"}, "total": 6}, {"img_url": "../images/dinosaur/\u6570\u636e\u7ed3\u6784.png", "learned": 0, "learned_details": [], "name": "\u6570\u636e\u7ed3\u6784", "style": {"name": "\u67f3\u6811"}, "total": 6}, {"img_url": "../images/dinosaur/\u786c\u4ef6\u8bfe.png", "learned": 2, "learned_details": [{"detail": {"achievement_date": "2026-05-07", "gif_url": null, "highlight": "\u6210\u529f\u5236\u4f5c\u4e86\u667a\u80fd\u95e8\u94c3\uff0c\u6709\u4eba\u6309\u94c3\u5c31\u4f1a\u54cd\u3002", "highlight_img": NaN, "knowledge": "\u5b66\u4e60\u4e86\u7528micro:bit\u63a7\u5236\u8702\u9e23\u5668\u548cLED\uff0c\u6a21\u62df\u95e8\u94c3\u3002", "mistake": "\u63a5\u7ebf\u9519\u8bef\u5bfc\u81f4\u8702\u9e23\u5668\u4e0d\u54cd\u3002", "mistake_monster_img": null, "mistake_video": "https://example.com/video/doorbell_fix.mp4", "story": "\u5c0f\u6050\u9f99\u7684\u5bb6\u5b89\u88c5\u4e86\u95e8\u94c3\uff0c\u5ba2\u4eba\u6765\u4e86\u4f1a\u53ee\u549a\u3002", "title": "\u786c\u4ef6\u8bfe\u4e4b\u667a\u80fd\u95e8\u94c3", "voice_url": NaN}, "id": 4, "short_title": "\u667a\u80fd\u95e8\u94c3", "status": "completed"}, {"detail": {"achievement_date": "2026-05-13", "gif_url": null, "highlight": "\u6210\u529f\u8bbe\u7f6e\u5bc6\u7801\uff0c\u53ea\u6709\u8f93\u5165\u6b63\u786e\u624d\u80fd\u5f00\u95e8\u3002", "highlight_img": "https://example.com/gif/lock.gif", "knowledge": "\u7528\u8235\u673a\u548c\u952e\u76d8\u77e9\u9635\u5236\u4f5c\u5bc6\u7801\u9501\u3002", "mistake": "\u5bc6\u7801\u9a8c\u8bc1\u903b\u8f91\u9519\u8bef\u3002", "mistake_monster_img": null, "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u7684\u5bb6\u6709\u4e86\u5bc6\u7801\u9501\uff0c\u574f\u4eba\u8fdb\u4e0d\u6765\u4e86\u3002", "title": "\u786c\u4ef6\u8bfe\u4e4b\u667a\u80fd\u95e8\u548c\u5bc6\u7801\u9501", "voice_url": NaN}, "id": 7, "short_title": "\u667a\u80fd\u95e8\u9501", "status": "completed"}], "name": "\u786c\u4ef6\u8bfe", "style": {"name": "\u79d1\u6280\u6811"}, "total": 4}, {"img_url": "../images/dinosaur/OJ\u8bad\u7ec3\u8425.png", "learned": 1, "learned_details": [{"detail": {"achievement_date": "2026-05-15", "gif_url": null, "highlight": "\u7b2c\u4e00\u6b21\u5728OJ\u4e0aAC\u4e86\u4e00\u9053\u9898\u3002", "highlight_img": NaN, "knowledge": "\u5b66\u4f1a\u4e86\u5728\u7ebf\u5224\u9898\u7cfb\u7edf\u7684\u57fa\u672c\u4f7f\u7528\uff0c\u89e3\u51b3\u7b80\u5355\u6570\u5b66\u9898\u3002", "mistake": "\u5faa\u73af\u8f93\u5165\u683c\u5f0f\u9519\u8bef\u3002", "mistake_monster_img": null, "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u5e26\u4f60\u53c2\u52a0\u7f16\u7a0b\u6bd4\u8d5b\uff0c\u4f60\u8d62\u5f97\u4e86\u7b2c\u4e00\u573a\u3002", "title": "OJ\u8bad\u7ec3\u8425\u521d\u8bd5", "voice_url": NaN}, "id": 8, "short_title": "OJ\u521d\u8bd5", "status": "completed"}], "name": "OJ\u8bad\u7ec3\u8425", "style": {"name": "\u667a\u6167\u6811"}, "total": 2}];
-    let audioCtx = null;
-    let musicPlaying = false;
+    const categories = [{"fog_image": "images/dinosaur/frog/2.png", "latest_node": {"detail": {"achievement_date": "2026-05-19", "gif_url": "", "highlight": "\u7528for+if\u627e\u51fa\u4e86\u5217\u8868\u4e2d\u7684\u5076\u6570\u3002", "highlight_img": NaN, "knowledge": "\u5728\u5faa\u73af\u4e2d\u4f7f\u7528\u6761\u4ef6\u5224\u65ad\uff0c\u7b5b\u9009\u6570\u636e\u3002", "mistake": "\u7f29\u8fdb\u9519\u8bef\u5bfc\u81f4\u903b\u8f91\u6df7\u4e71\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u8bf7\u4f60\u5e2e\u5fd9\u4ece\u4e00\u5806\u5b9d\u77f3\u4e2d\u6311\u51fa\u7ea2\u5b9d\u77f3\u3002", "title": "for\u5faa\u73af\u548cif\u5d4c\u5957", "voice_url": NaN}, "dino_intro": "\u6d4b\u8bd5\u663e\u793a", "dino_name": "\u4e09\u89d2\u9f99", "id": 10, "status": "current"}, "learned_count": 2, "learned_details": [{"detail": {"achievement_date": "2026-05-17", "gif_url": "", "highlight": "\u7528for\u5faa\u73af\u753b\u51fa\u4e86\u87ba\u65cb\u7ebf\u3002", "highlight_img": "https://example.com/gif/spiral.gif", "knowledge": "\u638c\u63e1for\u5faa\u73af\u904d\u5386\u5e8f\u5217\u3002", "mistake": "range\u53c2\u6570\u5199\u9519\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u6559\u4f60\u7528\u5faa\u73af\u6316\u5b9d\u77f3\uff0c\u6316\u4e86\u4e09\u5708\u3002", "title": "for\u5faa\u73af", "voice_url": NaN}, "dino_intro": "\u8155\u9f99\u662f\u5de8\u5927\u7684\u8725\u811a\u7c7b\u6050\u9f99\uff0c\u8116\u5b50\u957f\uff0c\u53ef\u4ee5\u5403\u5230\u9ad8\u5904\u7684\u6811\u53f6\u3002", "dino_name": "\u6881\u9f99", "id": 9, "status": "completed"}, {"detail": {"achievement_date": "2026-05-19", "gif_url": "", "highlight": "\u7528for+if\u627e\u51fa\u4e86\u5217\u8868\u4e2d\u7684\u5076\u6570\u3002", "highlight_img": NaN, "knowledge": "\u5728\u5faa\u73af\u4e2d\u4f7f\u7528\u6761\u4ef6\u5224\u65ad\uff0c\u7b5b\u9009\u6570\u636e\u3002", "mistake": "\u7f29\u8fdb\u9519\u8bef\u5bfc\u81f4\u903b\u8f91\u6df7\u4e71\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u8bf7\u4f60\u5e2e\u5fd9\u4ece\u4e00\u5806\u5b9d\u77f3\u4e2d\u6311\u51fa\u7ea2\u5b9d\u77f3\u3002", "title": "for\u5faa\u73af\u548cif\u5d4c\u5957", "voice_url": NaN}, "dino_intro": "\u6d4b\u8bd5\u663e\u793a", "dino_name": "\u4e09\u89d2\u9f99", "id": 10, "status": "current"}], "name": "\u5faa\u73af", "style": {"name": "\u5faa\u73af"}, "title": "\u267b\ufe0f \u5faa\u73af\u5b66\u5f92", "total": 6}, {"fog_image": "images/dinosaur/frog/1.png", "latest_node": {"detail": {"achievement_date": "2026-05-15", "gif_url": "", "highlight": "\u7b2c\u4e00\u6b21\u5728OJ\u4e0aAC\u4e86\u4e00\u9053\u9898\u3002", "highlight_img": NaN, "knowledge": "\u5b66\u4f1a\u4e86\u5728\u7ebf\u5224\u9898\u7cfb\u7edf\u7684\u57fa\u672c\u4f7f\u7528\uff0c\u89e3\u51b3\u7b80\u5355\u6570\u5b66\u9898\u3002", "mistake": "\u5faa\u73af\u8f93\u5165\u683c\u5f0f\u9519\u8bef\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u5e26\u4f60\u53c2\u52a0\u7f16\u7a0b\u6bd4\u8d5b\uff0c\u4f60\u8d62\u5f97\u4e86\u7b2c\u4e00\u573a\u3002", "title": "OJ\u8bad\u7ec3\u8425\u521d\u8bd5", "voice_url": NaN}, "dino_intro": "\u9a70\u9f99\u662f\u5c0f\u578b\u8089\u98df\u6050\u9f99\uff0c\u540e\u722a\u6709\u9570\u5200\u72b6\u7684\u5229\u722a\uff0c\u975e\u5e38\u654f\u6377\u3002", "dino_name": "\u9a70\u9f99", "id": 8, "status": "completed"}, "learned_count": 1, "learned_details": [{"detail": {"achievement_date": "2026-05-15", "gif_url": "", "highlight": "\u7b2c\u4e00\u6b21\u5728OJ\u4e0aAC\u4e86\u4e00\u9053\u9898\u3002", "highlight_img": NaN, "knowledge": "\u5b66\u4f1a\u4e86\u5728\u7ebf\u5224\u9898\u7cfb\u7edf\u7684\u57fa\u672c\u4f7f\u7528\uff0c\u89e3\u51b3\u7b80\u5355\u6570\u5b66\u9898\u3002", "mistake": "\u5faa\u73af\u8f93\u5165\u683c\u5f0f\u9519\u8bef\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u5e26\u4f60\u53c2\u52a0\u7f16\u7a0b\u6bd4\u8d5b\uff0c\u4f60\u8d62\u5f97\u4e86\u7b2c\u4e00\u573a\u3002", "title": "OJ\u8bad\u7ec3\u8425\u521d\u8bd5", "voice_url": NaN}, "dino_intro": "\u9a70\u9f99\u662f\u5c0f\u578b\u8089\u98df\u6050\u9f99\uff0c\u540e\u722a\u6709\u9570\u5200\u72b6\u7684\u5229\u722a\uff0c\u975e\u5e38\u654f\u6377\u3002", "dino_name": "\u9a70\u9f99", "id": 8, "status": "completed"}], "name": "OJ\u8bad\u7ec3\u8425", "style": {"name": "OJ\u8bad\u7ec3\u8425"}, "title": "\ud83c\udfc3 \u521d\u5165OJ", "total": 2}, {"fog_image": "images/dinosaur/frog/2.png", "latest_node": {"detail": {"achievement_date": "2026-05-13", "gif_url": "", "highlight": "\u6210\u529f\u8bbe\u7f6e\u5bc6\u7801\uff0c\u53ea\u6709\u8f93\u5165\u6b63\u786e\u624d\u80fd\u5f00\u95e8\u3002", "highlight_img": "https://example.com/gif/lock.gif", "knowledge": "\u7528\u8235\u673a\u548c\u952e\u76d8\u77e9\u9635\u5236\u4f5c\u5bc6\u7801\u9501\u3002", "mistake": "\u5bc6\u7801\u9a8c\u8bc1\u903b\u8f91\u9519\u8bef\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u7684\u5bb6\u6709\u4e86\u5bc6\u7801\u9501\uff0c\u574f\u4eba\u8fdb\u4e0d\u6765\u4e86\u3002", "title": "\u786c\u4ef6\u8bfe\u4e4b\u667a\u80fd\u95e8\u548c\u5bc6\u7801\u9501", "voice_url": NaN}, "dino_intro": "\u539a\u9f3b\u9f99\u662f\u89d2\u9f99\u79d1\u6050\u9f99\uff0c\u9f3b\u5b50\u4e0a\u6709\u4e00\u4e2a\u539a\u539a\u7684\u9aa8\u677f\uff0c\u7528\u6765\u6253\u67b6\u3002", "dino_name": "\u539a\u9f3b\u9f99", "id": 7, "status": "completed"}, "learned_count": 2, "learned_details": [{"detail": {"achievement_date": "2026-05-07", "gif_url": "", "highlight": "\u6210\u529f\u5236\u4f5c\u4e86\u667a\u80fd\u95e8\u94c3\uff0c\u6709\u4eba\u6309\u94c3\u5c31\u4f1a\u54cd\u3002", "highlight_img": NaN, "knowledge": "\u5b66\u4e60\u4e86\u7528micro:bit\u63a7\u5236\u8702\u9e23\u5668\u548cLED\uff0c\u6a21\u62df\u95e8\u94c3\u3002", "mistake": "\u63a5\u7ebf\u9519\u8bef\u5bfc\u81f4\u8702\u9e23\u5668\u4e0d\u54cd\u3002", "mistake_monster_img": "", "mistake_video": "https://example.com/video/doorbell_fix.mp4", "story": "\u5c0f\u6050\u9f99\u7684\u5bb6\u5b89\u88c5\u4e86\u95e8\u94c3\uff0c\u5ba2\u4eba\u6765\u4e86\u4f1a\u53ee\u549a\u3002", "title": "\u786c\u4ef6\u8bfe\u4e4b\u667a\u80fd\u95e8\u94c3", "voice_url": NaN}, "dino_intro": "\u767d\u718a\u9f99\u662f\u4e00\u79cd\u751f\u6d3b\u5728\u5317\u6781\u7684\u6050\u9f99\uff0c\u5168\u8eab\u767d\u8272\uff0c\u5f88\u8010\u5bd2\u3002", "dino_name": "\u767d\u718a\u9f99", "id": 4, "status": "completed"}, {"detail": {"achievement_date": "2026-05-13", "gif_url": "", "highlight": "\u6210\u529f\u8bbe\u7f6e\u5bc6\u7801\uff0c\u53ea\u6709\u8f93\u5165\u6b63\u786e\u624d\u80fd\u5f00\u95e8\u3002", "highlight_img": "https://example.com/gif/lock.gif", "knowledge": "\u7528\u8235\u673a\u548c\u952e\u76d8\u77e9\u9635\u5236\u4f5c\u5bc6\u7801\u9501\u3002", "mistake": "\u5bc6\u7801\u9a8c\u8bc1\u903b\u8f91\u9519\u8bef\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u7684\u5bb6\u6709\u4e86\u5bc6\u7801\u9501\uff0c\u574f\u4eba\u8fdb\u4e0d\u6765\u4e86\u3002", "title": "\u786c\u4ef6\u8bfe\u4e4b\u667a\u80fd\u95e8\u548c\u5bc6\u7801\u9501", "voice_url": NaN}, "dino_intro": "\u539a\u9f3b\u9f99\u662f\u89d2\u9f99\u79d1\u6050\u9f99\uff0c\u9f3b\u5b50\u4e0a\u6709\u4e00\u4e2a\u539a\u539a\u7684\u9aa8\u677f\uff0c\u7528\u6765\u6253\u67b6\u3002", "dino_name": "\u539a\u9f3b\u9f99", "id": 7, "status": "completed"}], "name": "\u786c\u4ef6\u8bfe", "style": {"name": "\u786c\u4ef6\u8bfe"}, "title": "\u2699\ufe0f \u786c\u4ef6\u5b66\u5f92", "total": 4}, {"fog_image": "images/dinosaur/frog/3.png", "latest_node": {"detail": {"achievement_date": "2026-05-11", "gif_url": "", "highlight": "\u8ba1\u7b97\u4e86\u4e24\u4e2a\u6570\u5b57\u7684\u548c\uff0c\u5e76\u6b63\u786e\u8f93\u51fa\u3002", "highlight_img": NaN, "knowledge": "\u5b66\u4e60int()\u5c06\u5b57\u7b26\u4e32\u8f6c\u4e3a\u6574\u6570\uff0c\u7528\u4e8e\u6570\u5b66\u8fd0\u7b97\u3002", "mistake": "\u8f6c\u6362\u975e\u6570\u5b57\u5b57\u7b26\u4e32\u62a5\u9519\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u5b66\u4f1a\u4e86\u6570\u6570\uff0c\u80fd\u5e2e\u5fd9\u8ba1\u7b97\u6c34\u679c\u6570\u91cf\u3002", "title": "int()", "voice_url": NaN}, "dino_intro": "\u57c3\u5fb7\u8499\u987f\u9f99\u662f\u9e2d\u5634\u9f99\u79d1\u6050\u9f99\uff0c\u5634\u5df4\u50cf\u9e2d\u5b50\uff0c\u5403\u690d\u7269\u3002", "dino_name": "\u57c3\u5fb7\u8499\u987f\u9f99", "id": 6, "status": "completed"}, "learned_count": 3, "learned_details": [{"detail": {"achievement_date": "2026-05-01", "gif_url": "", "highlight": "\u7b2c\u4e00\u6b21\u7528\u53d8\u91cf\u8ba1\u7b97\u81ea\u5df1\u7684\u5e74\u9f84\u5e76\u6253\u5370\u51fa\u6765\u3002", "highlight_img": NaN, "knowledge": "\u5b66\u4f1a\u4e86\u4f7f\u7528print\u8f93\u51fa\u6587\u672c\uff0c\u5b9a\u4e49\u53d8\u91cf\u5b58\u50a8\u6570\u636e\u3002", "mistake": "\u5fd8\u8bb0\u52a0\u5f15\u53f7\u5bfc\u81f4\u8bed\u6cd5\u9519\u8bef\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u5b66\u4f1a\u4e86\u8bf4\u8bdd\uff0c\u5b83\u558a\u51fa\u4e86\u201cHello World\u201d\u3002", "title": "print()\u548c\u53d8\u91cf", "voice_url": "https://example.com/voice/print.mp3"}, "dino_intro": "\u4f3c\u9cc4\u9f99\u662f\u4e00\u79cd\u5927\u578b\u68d8\u9f99\u79d1\u6050\u9f99\uff0c\u5b83\u7684\u5634\u5df4\u50cf\u9cc4\u9c7c\u4e00\u6837\u957f\uff0c\u64c5\u957f\u6355\u9c7c\u3002", "dino_name": "\u4f3c\u9cc4\u9f99", "id": 1, "status": "completed"}, {"detail": {"achievement_date": "2026-05-03", "gif_url": "", "highlight": "\u7f16\u5199\u4e86\u95ee\u7b54\u7a0b\u5e8f\uff0c\u56de\u7b54\u4e86\u6050\u9f99\u7684\u95ee\u9898\u3002", "highlight_img": NaN, "knowledge": "\u638c\u63e1input\u83b7\u53d6\u7528\u6237\u8f93\u5165\uff0c\u5e76\u8f6c\u6362\u4e3a\u5b57\u7b26\u4e32\u3002", "mistake": "\u8f93\u5165\u7684\u6570\u5b57\u6ca1\u6709\u8f6cint\u5bfc\u81f4\u62a5\u9519\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u95ee\u4f60\u53eb\u4ec0\u4e48\u540d\u5b57\uff0c\u4f60\u56de\u7b54\u540e\u5b83\u5f88\u5f00\u5fc3\u3002", "title": "input()", "voice_url": NaN}, "dino_intro": "\u8584\u677f\u9f99\u662f\u86c7\u9888\u9f99\u7684\u4e00\u79cd\uff0c\u8116\u5b50\u975e\u5e38\u957f\uff0c\u51e0\u4e4e\u5360\u8eab\u4f53\u7684\u4e00\u534a\u3002", "dino_name": "\u68d8\u9f99", "id": 2, "status": "completed"}, {"detail": {"achievement_date": "2026-05-11", "gif_url": "", "highlight": "\u8ba1\u7b97\u4e86\u4e24\u4e2a\u6570\u5b57\u7684\u548c\uff0c\u5e76\u6b63\u786e\u8f93\u51fa\u3002", "highlight_img": NaN, "knowledge": "\u5b66\u4e60int()\u5c06\u5b57\u7b26\u4e32\u8f6c\u4e3a\u6574\u6570\uff0c\u7528\u4e8e\u6570\u5b66\u8fd0\u7b97\u3002", "mistake": "\u8f6c\u6362\u975e\u6570\u5b57\u5b57\u7b26\u4e32\u62a5\u9519\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u5c0f\u6050\u9f99\u5b66\u4f1a\u4e86\u6570\u6570\uff0c\u80fd\u5e2e\u5fd9\u8ba1\u7b97\u6c34\u679c\u6570\u91cf\u3002", "title": "int()", "voice_url": NaN}, "dino_intro": "\u57c3\u5fb7\u8499\u987f\u9f99\u662f\u9e2d\u5634\u9f99\u79d1\u6050\u9f99\uff0c\u5634\u5df4\u50cf\u9e2d\u5b50\uff0c\u5403\u690d\u7269\u3002", "dino_name": "\u57c3\u5fb7\u8499\u987f\u9f99", "id": 6, "status": "completed"}], "name": "\u57fa\u7840\u8bed\u6cd5", "style": {"name": "\u57fa\u7840\u8bed\u6cd5"}, "title": "\ud83c\udfc6 \u8bed\u6cd5\u5927\u5e08", "total": 3}, {"fog_image": "images/dinosaur/frog/2.png", "latest_node": {"detail": {"achievement_date": "2026-05-09", "gif_url": "", "highlight": "\u7f16\u5199\u4e86\u6050\u9f99\u731c\u62f3\u6e38\u620f\uff0c\u8d62\u4e86\u6709\u5956\u52b1\u3002", "highlight_img": NaN, "knowledge": "\u638c\u63e1if-else\u53cc\u5206\u652f\u7ed3\u6784\u3002", "mistake": "else\u540e\u9762\u52a0\u6761\u4ef6\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u6050\u9f99\u548c\u4f60\u731c\u62f3\uff0c\u4f60\u8d62\u4e86\u5b83\u4f1a\u8df3\u821e\u3002", "title": "if-else", "voice_url": NaN}, "dino_intro": "\u6ca7\u9f99\u662f\u6d77\u6d0b\u4e2d\u7684\u9876\u7ea7\u63a0\u98df\u8005\uff0c\u4f53\u578b\u5de8\u5927\uff0c\u7259\u9f7f\u950b\u5229\u3002", "dino_name": "\u6ca7\u9f99", "id": 5, "status": "completed"}, "learned_count": 2, "learned_details": [{"detail": {"achievement_date": "2026-05-05", "gif_url": "", "highlight": "\u7528if\u5224\u65ad\u6050\u9f99\u662f\u5426\u5403\u9971\uff0c\u8f93\u51fa\u4e0d\u540c\u7ed3\u679c\u3002", "highlight_img": "https://example.com/gif/if_dino.gif", "knowledge": "\u7406\u89e3if\u6761\u4ef6\u5224\u65ad\uff0c\u6839\u636e\u6761\u4ef6\u6267\u884c\u4e0d\u540c\u4ee3\u7801\u3002", "mistake": "\u5fd8\u8bb0\u5192\u53f7\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u5982\u679c\u6050\u9f99\u997f\u4e86\uff0c\u5c31\u7ed9\u5b83\u5582\u98df\u3002", "title": "if", "voice_url": NaN}, "dino_intro": "\u9c7c\u9f99\u4e0d\u662f\u6050\u9f99\uff0c\u800c\u662f\u6d77\u751f\u722c\u884c\u52a8\u7269\uff0c\u5916\u5f62\u50cf\u9c7c\uff0c\u6e38\u6cf3\u901f\u5ea6\u5f88\u5feb\u3002", "dino_name": "\u9c7c\u9f99", "id": 3, "status": "completed"}, {"detail": {"achievement_date": "2026-05-09", "gif_url": "", "highlight": "\u7f16\u5199\u4e86\u6050\u9f99\u731c\u62f3\u6e38\u620f\uff0c\u8d62\u4e86\u6709\u5956\u52b1\u3002", "highlight_img": NaN, "knowledge": "\u638c\u63e1if-else\u53cc\u5206\u652f\u7ed3\u6784\u3002", "mistake": "else\u540e\u9762\u52a0\u6761\u4ef6\u3002", "mistake_monster_img": "", "mistake_video": NaN, "story": "\u6050\u9f99\u548c\u4f60\u731c\u62f3\uff0c\u4f60\u8d62\u4e86\u5b83\u4f1a\u8df3\u821e\u3002", "title": "if-else", "voice_url": NaN}, "dino_intro": "\u6ca7\u9f99\u662f\u6d77\u6d0b\u4e2d\u7684\u9876\u7ea7\u63a0\u98df\u8005\uff0c\u4f53\u578b\u5de8\u5927\uff0c\u7259\u9f7f\u950b\u5229\u3002", "dino_name": "\u6ca7\u9f99", "id": 5, "status": "completed"}], "name": "\u6761\u4ef6\u5224\u65ad", "style": {"name": "\u6761\u4ef6\u5224\u65ad"}, "title": "\u2696\ufe0f \u5224\u65ad\u5b66\u5f92", "total": 3}];
+    const totalLearnedAll = 10;
+    const totalKnowledge = 24;
+    let audioCtx = null, musicPlaying = false;
     const bgMusic = document.getElementById('bgMusic');
 
-    // 饼图绘制
     function drawPie() {
       const canvas = document.getElementById('pieChart');
       if (!canvas) return;
@@ -374,9 +440,7 @@
       canvas.width = w; canvas.height = h;
       ctx.clearRect(0, 0, w, h);
       const center = 40, radius = 32;
-      const totalLearned = categories.reduce((s,c)=> s + c.learned, 0);
-      const totalAll = categories.reduce((s,c)=> s + c.total, 0);
-      const percent = totalAll === 0 ? 0 : totalLearned / totalAll;
+      const percent = totalKnowledge === 0 ? 0 : totalLearnedAll / totalKnowledge;
       const start = -Math.PI/2;
       const end = start + percent * Math.PI * 2;
       ctx.beginPath();
@@ -399,133 +463,156 @@
       ctx.fillText(Math.round(percent*100)+"%", center, center);
     }
 
-    // 根据原始图片尺寸(2364x1773)上的参考点(300,500)，等比例计算出实际显示容器内的相对坐标(百分比)
-    // 然后以该点为中心，在树冠区域弧形分布果实
-    function generateFruitPositions(count, containerWidth, containerHeight) {
-      const refX = 300, refY = 500;
-      const imgW = 2364, imgH = 1773;
-      const centerX = (refX / imgW) * containerWidth;
-      const centerY = (refY / imgH) * containerHeight;
-      const radius = Math.min(containerWidth, containerHeight) * 0.28;
-      const startAngle = -40 * Math.PI/180;
-      const endAngle = 40 * Math.PI/180;
-      const positions = [];
-      if (count === 1) {
-        positions.push({ x: centerX, y: centerY });
-      } else {
-        for (let i = 0; i < count; i++) {
-          const t = i / (count - 1);
-          const angle = startAngle + t * (endAngle - startAngle);
-          const x = centerX + Math.cos(angle) * radius;
-          const y = centerY + Math.sin(angle) * radius * 0.8;
-          positions.push({ x, y });
-        }
-      }
-      return positions;
+    function playEggBreakSound() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.5);
     }
+
+    function showEggModal(node, isEncyclopedia = false) {
+      const dinoName = node.dino_name;
+      const intro = node.dino_intro;
+      const imageUrl = `images/dinosaur/main/${node.id}.png`;  // 使用数字ID命名
+      const html = `
+        <div style="text-align:center;">
+          <div class="egg-shake">🥚✨</div>
+          <img src="${imageUrl}" class="new-dino-img" onerror="this.src='images/dinosaur/main/default.png'">
+          <h2 style="margin-top:12px;">🦕 ${dinoName}</h2>
+          ${!isEncyclopedia ? '<p style="color:#ff8c00;">✨ 新角色已进入你的图鉴！ ✨</p>' : ''}
+          <div class="dino-intro">${intro}</div>
+        </div>
+      `;
+      document.getElementById('modalContent').innerHTML = html;
+      document.getElementById('fruitModal').style.display = 'flex';
+      if (!isEncyclopedia) playEggBreakSound();
+    }
+
+    function showNextLockedHint() {
+      const html = `
+        <div style="text-align:center;">
+          <h2>🥚 神秘恐龙蛋</h2>
+          <p style="margin-top:16px;">学完下堂课，你就能看到它的真面目啦！</p>
+          <p>加油继续学习吧~</p>
+        </div>
+      `;
+      document.getElementById('modalContent').innerHTML = html;
+      document.getElementById('fruitModal').style.display = 'flex';
+    }
+
+    function showEncyclopedia(cat) {
+      const unlockedDinos = cat.learned_details.map(node => `
+        <div style="display:inline-block; margin:8px; text-align:center; cursor:pointer;" onclick="showEggModalFromEncyclopedia(${node.id}, '${cat.name}')">
+          <img src="images/dinosaur/main/${node.id}.png" style="width:100px; border-radius:16px;" onerror="this.src='images/dinosaur/main/default.png'">
+          <div>${node.dino_name}</div>
+        </div>
+      `).join('');
+      const html = `
+        <h2>📖 ${cat.style.name} 图鉴</h2>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center;">
+          ${unlockedDinos || '<p>还没有解锁任何角色，快去学习吧！</p>'}
+        </div>
+      `;
+      document.getElementById('modalContent').innerHTML = html;
+      document.getElementById('fruitModal').style.display = 'flex';
+    }
+
+    window.showEggModalFromEncyclopedia = function(nodeId, catName) {
+      const cat = categories.find(c => c.name === catName);
+      const node = cat.learned_details.find(n => n.id === nodeId);
+      if (node) showEggModal(node, true);
+    };
 
     function initForest() {
       drawPie();
       const treeList = document.getElementById('treeList');
       treeList.innerHTML = '';
 
-      for (let idx = 0; idx < categories.length; idx++) {
-        const cat = categories[idx];
+      for (let cat of categories) {
         const learnedDetails = cat.learned_details;
-        const learnedCount = cat.learned;
-        let latestNode = null;
-        if (learnedDetails.length > 0) {
-          const current = learnedDetails.find(n => n.status === 'current');
-          latestNode = current || learnedDetails[learnedDetails.length - 1];
-        }
+        const total = cat.total;
+        const learnedCount = cat.learned_count;
+        const latestNode = cat.latest_node;
 
-        let introText = '';
-        if (learnedDetails.length === 0) {
-          introText = '✨ 还未解锁任何恐龙，快去学习吧！';
-        } else {
-          const names = learnedDetails.map(n => n.short_title).join('、');
-          introText = `已解锁：${names}`;
-          if (latestNode && latestNode.detail && latestNode.detail.story) {
-            introText += `。最新：${latestNode.detail.story.substring(0, 40)}`;
+        // 生成水平收集槽
+        let slotsHtml = '';
+        for (let i = 1; i <= total; i++) {
+          const node = learnedDetails.find(n => n.id === cat.learned_details[i-1]?.id);
+          const isUnlocked = i <= learnedCount;
+          const isCurrent = isUnlocked && node && node.id === latestNode.id;
+          let icon = '';
+          let extraClass = '';
+          if (isUnlocked) {
+            icon = '🦕';
+            if (isCurrent) extraClass = 'current';
+          } else if (i === learnedCount + 1) {
+            icon = '🥚';
+            extraClass = 'locked next';
+          } else {
+            icon = '🥚';
+            extraClass = 'locked';
           }
+          slotsHtml += `<div class="slot-item ${extraClass}" data-slot="${i}" data-cat="${cat.name}" data-node-id="${node ? node.id : ''}">${icon}</div>`;
         }
 
         const card = document.createElement('div');
         card.className = 'tree-card';
-
-        const imgContainer = document.createElement('div');
-        imgContainer.className = 'tree-img-container';
-        const img = document.createElement('img');
-        img.className = 'tree-bg';
-        img.src = cat.img_url;
-        img.alt = cat.name;
-        img.onerror = () => { img.style.display = 'none'; imgContainer.style.backgroundColor = '#c8e6c9'; };
-        imgContainer.appendChild(img);
-
-        const fruitLayer = document.createElement('div');
-        fruitLayer.className = 'fruit-layer';
-        imgContainer.appendChild(fruitLayer);
-
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'tree-info';
-        infoDiv.innerHTML = `
-          <div class="tree-name">${cat.style.name}</div>
-          <div class="progress-badge">🍎 ${learnedCount}/${cat.total}</div>
-          <div class="dino-intro">🦕 ${introText}</div>
+        card.innerHTML = `
+          <div class="tree-img-container">
+            <img class="tree-bg" src="${cat.fog_image}" alt="${cat.name}">
+          </div>
+          <div class="tree-info">
+            <div>
+              <span class="tree-name">${cat.style.name}</span>
+              <span class="category-title">🏅 ${cat.title}</span>
+            </div>
+            <div class="slot-bar" data-cat="${cat.name}">
+              ${slotsHtml}
+              <button class="encyclopedia-btn" data-cat="${cat.name}">📖 图鉴</button>
+            </div>
+            <div class="knowledge-list" data-cat="${cat.name}">
+              ${learnedDetails.map(node => `<div class="knowledge-item" data-node-id="${node.id}">📘 ${node.detail.title}</div>`).join('')}
+            </div>
+          </div>
         `;
-
-        card.appendChild(imgContainer);
-        card.appendChild(infoDiv);
         treeList.appendChild(card);
 
-        card.fruitData = { learnedDetails, latestNode, fruitLayer, imgContainer };
-      }
-
-      setTimeout(() => {
-        document.querySelectorAll('.tree-card').forEach(card => {
-          const container = card.querySelector('.tree-img-container');
-          const fruitLayer = card.querySelector('.fruit-layer');
-          const learnedDetails = card.fruitData.learnedDetails;
-          const latestNode = card.fruitData.latestNode;
-          if (!container || !fruitLayer) return;
-          const img = container.querySelector('img');
-          if (img && !img.complete) {
-            img.addEventListener('load', () => placeFruits(container, fruitLayer, learnedDetails, latestNode));
-            if (img.complete) placeFruits(container, fruitLayer, learnedDetails, latestNode);
-          } else {
-            placeFruits(container, fruitLayer, learnedDetails, latestNode);
+        // 绑定图鉴按钮事件
+        card.querySelector('.encyclopedia-btn').addEventListener('click', () => showEncyclopedia(cat));
+        // 绑定知识列表点击（学习记录）
+        card.querySelectorAll('.knowledge-item').forEach(el => {
+          const nodeId = parseInt(el.dataset.nodeId);
+          const node = learnedDetails.find(n => n.id === nodeId);
+          if (node) el.addEventListener('click', () => showLearningRecord(node));
+        });
+        // 绑定收集槽点击
+        const slots = card.querySelectorAll('.slot-item');
+        slots.forEach(slot => {
+          const isNext = slot.classList.contains('next');
+          const isCurrent = slot.classList.contains('current');
+          const nodeId = slot.dataset.nodeId;
+          if (isCurrent && nodeId) {
+            const node = learnedDetails.find(n => n.id === parseInt(nodeId));
+            if (node) {
+              slot.addEventListener('click', () => showEggModal(node, false));
+            }
+          } else if (isNext) {
+            slot.addEventListener('click', () => showNextLockedHint());
+          } else if (slot.classList.contains('unlocked')) {
+            const node = learnedDetails.find(n => n.id === parseInt(nodeId));
+            if (node) slot.addEventListener('click', () => showEggModal(node, true));
           }
         });
-      }, 100);
+      }
     }
 
-    function placeFruits(container, fruitLayer, learnedDetails, latestNode) {
-      const rect = container.getBoundingClientRect();
-      const width = rect.width;
-      const height = rect.height;
-      if (width === 0) return;
-      const positions = generateFruitPositions(learnedDetails.length, width, height);
-      fruitLayer.innerHTML = '';
-      learnedDetails.forEach((node, i) => {
-        const pos = positions[i];
-        const fruitDiv = document.createElement('div');
-        fruitDiv.className = 'fruit';
-        if (latestNode && node.id === latestNode.id) {
-          fruitDiv.classList.add('pulse');
-        }
-        fruitDiv.style.left = `${pos.x}px`;
-        fruitDiv.style.top = `${pos.y}px`;
-        // 不显示任何文字，只保留黄色圆点
-        fruitDiv.innerHTML = '';
-        fruitDiv.addEventListener('click', (e) => {
-          e.stopPropagation();
-          showNodeDetail(node);
-        });
-        fruitLayer.appendChild(fruitDiv);
-      });
-    }
-
-    function showNodeDetail(node) {
+    function showLearningRecord(node) {
       const detail = node.detail;
       const monsterHtml = detail.mistake ? `<div><strong>🐉 错题小怪兽</strong><p>${detail.mistake}</p>${detail.mistake_monster_img ? `<img src="${detail.mistake_monster_img}" width="80">` : ''}</div>` : '';
       const highlightMedia = detail.gif_url ? `<img src="${detail.gif_url}" style="width:100%; border-radius:12px;">` : (detail.highlight_img ? `<img src="${detail.highlight_img}" style="width:100%; border-radius:12px;">` : '');
@@ -544,10 +631,7 @@
     }
 
     function closeModal() { document.getElementById('fruitModal').style.display = 'none'; }
-    function toggleLetter() {
-      const el = document.getElementById('letterContent');
-      el.style.display = el.style.display === 'block' ? 'none' : 'block';
-    }
+    function toggleLetter() { const el = document.getElementById('letterContent'); el.style.display = el.style.display === 'block' ? 'none' : 'block'; }
     function changeBg() {
       const url = prompt('背景图片链接（留空清除）');
       if (url !== null) {
@@ -559,7 +643,7 @@
     function toggleMusic() {
       if (!bgMusic.src || bgMusic.src === '') return;
       if (musicPlaying) { bgMusic.pause(); musicPlaying = false; }
-      else { bgMusic.play().catch(e=>console.log); musicPlaying = true; }
+      else { bgMusic.play().then(()=>musicPlaying=true).catch(e=>console.log); }
     }
     function generateShareCard() {
       const element = document.querySelector('.forest');
@@ -574,7 +658,7 @@
     window.addEventListener('load', () => {
       if ("https://example.com/music/dino.mp3" && "https://example.com/music/dino.mp3" !== "") {
         bgMusic.load();
-        bgMusic.play().then(() => musicPlaying=true).catch(e=>console.log);
+        bgMusic.play().then(()=>musicPlaying=true).catch(e=>console.log);
       }
     });
   </script>
