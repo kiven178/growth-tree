@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>编程成长树 - 家长登录</title>
+  <style>
+    body {
+      margin: 0; height: 100vh;
+      display: flex; justify-content: center; align-items: center;
+      background: linear-gradient(135deg, #a5d6a7, #c8e6c9);
+      font-family: 'PingFang SC', sans-serif;
+    }
+    .login-card {
+      background: white; padding: 30px 25px; border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      width: 300px; text-align: center; position: relative;
+    }
+    h2 { color: #2e7d32; margin-bottom: 25px; }
+    input {
+      width: 100%; padding: 10px; margin: 8px 0;
+      border: 1px solid #ccc; border-radius: 10px;
+      font-size: 16px; box-sizing: border-box;
+    }
+    button {
+      width: 100%; padding: 12px; background: #43a047;
+      color: white; border: none; border-radius: 10px;
+      font-size: 18px; cursor: pointer; margin-top: 10px;
+    }
+    .error { color: #d32f2f; font-size: 14px; margin-top: 8px; display: none; }
+    .bg-btn {
+      position: absolute; top: 10px; right: 10px;
+      background: none; border: none; font-size: 20px; cursor: pointer;
+      color: #888; padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <button class="bg-btn" title="更换背景" onclick="changeBg()">🖼️</button>
+    <h2>🌱 进入孩子的成长花园</h2>
+    <input type="text" id="nameInput" list="studentList" placeholder="输入孩子姓名">
+    <datalist id="studentList">
+      
+      <option value="淘淘">
+      
+      <option value="洛洛">
+      
+      <option value="陈逸杭">
+      
+      <option value="李艾华">
+      
+      <option value="花朵">
+      
+      <option value="卢鸣岐">
+      
+      <option value="程会博">
+      
+      <option value="陈仲翼">
+      
+      <option value="姜懿展">
+      
+      <option value="林圻恩">
+      
+      <option value="林宇辰">
+      
+      <option value="张文博">
+      
+      <option value="杨俊哲">
+      
+      <option value="黄峥">
+      
+      <option value="郑宸硕">
+      
+      <option value="小邹">
+      
+      <option value="姜皓文">
+      
+      <option value="胡梓硕">
+      
+      <option value="严兆轩">
+      
+      <option value="赵若涵">
+      
+      <option value="方奕阳">
+      
+      <option value="王俊儒">
+      
+      <option value="林钰冰">
+      
+      <option value="贺雨欣">
+      
+      <option value="彬彬">
+      
+      <option value="刘睿骁">
+      
+      <option value="橙子">
+      
+      <option value="黄梓凯">
+      
+      <option value="萨棕峻">
+      
+      <option value="杨媛菁">
+      
+      <option value="柳智翔">
+      
+      <option value="谢司义">
+      
+      <option value="雷智尧">
+      
+      <option value="邹文俊">
+      
+      <option value="王煊然">
+      
+      <option value="赵颂">
+      
+      <option value="王子桓">
+      
+      <option value="杨善鑫">
+      
+      <option value="刘传霖">
+      
+      <option value="周俊颖">
+      
+      <option value="柯子辰">
+      
+      <option value="王紫涵">
+      
+      <option value="黎乐锴">
+      
+      <option value="蔡心宸">
+      
+      <option value="汤圆">
+      
+      <option value="杨煜辰">
+      
+      <option value="周子乔">
+      
+      <option value="郑家睿">
+      
+      <option value="韩牧野">
+      
+      <option value="王诗云、王诗涵">
+      
+      <option value="张浩宇">
+      
+      <option value="杜江舟">
+      
+      <option value="施敬庭">
+      
+      <option value="覃诗琪">
+      
+      <option value="柯宥辛">
+      
+      <option value="李芠杰">
+      
+      <option value="刘伟博">
+      
+      <option value="曦曦">
+      
+      <option value="杨轶凯">
+      
+      <option value="伍明哲">
+      
+      <option value="成家佳">
+      
+      <option value="杨敬庭">
+      
+      <option value="陈才">
+      
+      <option value="熙凯">
+      
+      <option value="吴曾成语">
+      
+      <option value="屈彧帆">
+      
+      <option value="陈浅川">
+      
+      <option value="衣浩宇">
+      
+      <option value="田慧馨">
+      
+      <option value="夏天">
+      
+      <option value="赵智杰">
+      
+      <option value="彭逸遥">
+      
+      <option value="刘致远">
+      
+      <option value="雷名宇">
+      
+      <option value="敖裕航">
+      
+      <option value="罗瑾森">
+      
+      <option value="豆豆">
+      
+      <option value="辜祉颐">
+      
+      <option value="祁霖祁霁">
+      
+      <option value="沈千尧">
+      
+      <option value="唐浩轩">
+      
+      <option value="芦佳钰">
+      
+      <option value="方泽仟">
+      
+      <option value="张梓珊">
+      
+      <option value="李欣泽">
+      
+      <option value="陈梓睿">
+      
+      <option value="龙思丞">
+      
+      <option value="奇奇">
+      
+      <option value="李宣儒">
+      
+      <option value="杨东岳">
+      
+      <option value="花似锦">
+      
+      <option value="王鹤翔">
+      
+      <option value="韩一睿">
+      
+      <option value="徐承喆">
+      
+      <option value="侯皓嘉">
+      
+      <option value="杨程煜">
+      
+      <option value="谭宇轩">
+      
+      <option value="橙子">
+      
+      <option value="陈诗沐娢">
+      
+      <option value="文瑞">
+      
+      <option value="王淯崟">
+      
+      <option value="段奕成">
+      
+      <option value="周子昱">
+      
+      <option value="彭治霖">
+      
+      <option value="任晞瑞">
+      
+      <option value="辛宇桐">
+      
+      <option value="潘子萱">
+      
+      <option value="高玉来">
+      
+      <option value="唐梓轩">
+      
+      <option value="金诗然">
+      
+      <option value="刘柏壬">
+      
+      <option value="赵俊博">
+      
+      <option value="杭天">
+      
+      <option value="周子淇">
+      
+      <option value="许梓翊">
+      
+      <option value="范佩希">
+      
+      <option value="甄辰林">
+      
+      <option value="王启明">
+      
+      <option value="周子衿">
+      
+      <option value="张家奇">
+      
+      <option value="陈凯茜">
+      
+      <option value="汪俊彦">
+      
+      <option value="果果">
+      
+      <option value="黎景南">
+      
+      <option value="林辰浩">
+      
+      <option value="尤兴羽">
+      
+      <option value="肖殷果">
+      
+      <option value="李宝玥">
+      
+      <option value="郭源少">
+      
+      <option value="睿宁">
+      
+      <option value="邓俊贤">
+      
+      <option value="沈力行">
+      
+      <option value="屈辰宇">
+      
+      <option value="钟素阅">
+      
+      <option value="宋梓瑞">
+      
+      <option value="黄锦城">
+      
+      <option value="吴泽楷">
+      
+      <option value="廖韵茹">
+      
+      <option value="龙柏宇">
+      
+      <option value="陈谊">
+      
+      <option value="向辰昊">
+      
+      <option value="周逸辰">
+      
+      <option value="苗苗">
+      
+      <option value="郑子程">
+      
+      <option value="李依宸">
+      
+      <option value="益诚">
+      
+      <option value="付仁俊">
+      
+      <option value="桓荣">
+      
+      <option value="高嘉阳">
+      
+      <option value="冯予轩">
+      
+      <option value="姚顺宇">
+      
+      <option value="高铎宸">
+      
+      <option value="诗彤">
+      
+      <option value="周佛梁">
+      
+      <option value="李殷瑜">
+      
+      <option value="陶则宇">
+      
+      <option value="靳一鸣">
+      
+      <option value="李柯毅">
+      
+      <option value="刘恩铭">
+      
+      <option value="刘梓霖">
+      
+      <option value="月月">
+      
+      <option value="蔡梓信">
+      
+      <option value="王世泰">
+      
+      <option value="陈诗诗">
+      
+      <option value="王茂舒">
+      
+      <option value="罗宇恒">
+      
+      <option value="要奕志">
+      
+      <option value="李浩然">
+      
+      <option value="宣奕民">
+      
+      <option value="谭韵晗">
+      
+      <option value="石函雨">
+      
+      <option value="蒋一铭">
+      
+      <option value="梁馨悦">
+      
+      <option value="顾浩楠">
+      
+      <option value="刘骥和">
+      
+      <option value="李馨">
+      
+      <option value="夏国锐">
+      
+      <option value="伍彦诺">
+      
+      <option value="葛懿">
+      
+      <option value="丁圣恩">
+      
+      <option value="张杰懿">
+      
+      <option value="康熙晨">
+      
+      <option value="程皓轩">
+      
+      <option value="蔡天成">
+      
+      <option value="朱禹霏">
+      
+      <option value="李建勋">
+      
+      <option value="烨华">
+      
+      <option value="王相程">
+      
+      <option value="赵峻辰">
+      
+      <option value="韦东辉">
+      
+      <option value="图栎雅思">
+      
+      <option value="叶靖成、叶靖宇">
+      
+      <option value="张宇泽">
+      
+      <option value="秦国程">
+      
+      <option value="刘米亚">
+      
+      <option value="杨铠睿">
+      
+      <option value="王时雨">
+      
+      <option value="王俊颖">
+      
+      <option value="田莘佑">
+      
+      <option value="朱永晟">
+      
+      <option value="杨佳萌">
+      
+      <option value="倪浤智">
+      
+    </datalist>
+    <input type="password" id="passwordInput" placeholder="请输入成长密码">
+    <div class="error" id="errorMsg">❌ 姓名或密码错误</div>
+    <button onclick="login()">✨ 进入成长树</button>
+  </div>
+
+  <script>
+    const studentMap = {
+      
+      "淘淘": {
+        "password": "7609",
+        "url": "淘淘.html"
+      },
+      
+      "洛洛": {
+        "password": "1036",
+        "url": "洛洛.html"
+      },
+      
+      "陈逸杭": {
+        "password": "2726",
+        "url": "陈逸杭.html"
+      },
+      
+      "李艾华": {
+        "password": "420",
+        "url": "李艾华.html"
+      },
+      
+      "花朵": {
+        "password": "1378",
+        "url": "花朵.html"
+      },
+      
+      "卢鸣岐": {
+        "password": "6113",
+        "url": "卢鸣岐.html"
+      },
+      
+      "程会博": {
+        "password": "6859",
+        "url": "程会博.html"
+      },
+      
+      "陈仲翼": {
+        "password": "8089",
+        "url": "陈仲翼.html"
+      },
+      
+      "姜懿展": {
+        "password": "6656",
+        "url": "姜懿展.html"
+      },
+      
+      "林圻恩": {
+        "password": "75",
+        "url": "林圻恩.html"
+      },
+      
+      "林宇辰": {
+        "password": "1578",
+        "url": "林宇辰.html"
+      },
+      
+      "张文博": {
+        "password": "4659",
+        "url": "张文博.html"
+      },
+      
+      "杨俊哲": {
+        "password": "9209",
+        "url": "杨俊哲.html"
+      },
+      
+      "黄峥": {
+        "password": "2996",
+        "url": "黄峥.html"
+      },
+      
+      "郑宸硕": {
+        "password": "4479",
+        "url": "郑宸硕.html"
+      },
+      
+      "小邹": {
+        "password": "4977",
+        "url": "小邹.html"
+      },
+      
+      "姜皓文": {
+        "password": "1103",
+        "url": "姜皓文.html"
+      },
+      
+      "胡梓硕": {
+        "password": "2553",
+        "url": "胡梓硕.html"
+      },
+      
+      "严兆轩": {
+        "password": "1333",
+        "url": "严兆轩.html"
+      },
+      
+      "赵若涵": {
+        "password": "5130",
+        "url": "赵若涵.html"
+      },
+      
+      "方奕阳": {
+        "password": "2507",
+        "url": "方奕阳.html"
+      },
+      
+      "王俊儒": {
+        "password": "1313",
+        "url": "王俊儒.html"
+      },
+      
+      "林钰冰": {
+        "password": "5415",
+        "url": "林钰冰.html"
+      },
+      
+      "贺雨欣": {
+        "password": "1830",
+        "url": "贺雨欣.html"
+      },
+      
+      "彬彬": {
+        "password": "2798",
+        "url": "彬彬.html"
+      },
+      
+      "刘睿骁": {
+        "password": "86",
+        "url": "刘睿骁.html"
+      },
+      
+      "橙子": {
+        "password": "5027",
+        "url": "橙子.html"
+      },
+      
+      "黄梓凯": {
+        "password": "1622",
+        "url": "黄梓凯.html"
+      },
+      
+      "萨棕峻": {
+        "password": "3611",
+        "url": "萨棕峻.html"
+      },
+      
+      "杨媛菁": {
+        "password": "7366",
+        "url": "杨媛菁.html"
+      },
+      
+      "柳智翔": {
+        "password": "2526",
+        "url": "柳智翔.html"
+      },
+      
+      "谢司义": {
+        "password": "1523",
+        "url": "谢司义.html"
+      },
+      
+      "雷智尧": {
+        "password": "1240",
+        "url": "雷智尧.html"
+      },
+      
+      "邹文俊": {
+        "password": "203",
+        "url": "邹文俊.html"
+      },
+      
+      "王煊然": {
+        "password": "32",
+        "url": "王煊然.html"
+      },
+      
+      "赵颂": {
+        "password": "8376",
+        "url": "赵颂.html"
+      },
+      
+      "王子桓": {
+        "password": "7735",
+        "url": "王子桓.html"
+      },
+      
+      "杨善鑫": {
+        "password": "4521",
+        "url": "杨善鑫.html"
+      },
+      
+      "刘传霖": {
+        "password": "5065",
+        "url": "刘传霖.html"
+      },
+      
+      "周俊颖": {
+        "password": "2739",
+        "url": "周俊颖.html"
+      },
+      
+      "柯子辰": {
+        "password": "3573",
+        "url": "柯子辰.html"
+      },
+      
+      "王紫涵": {
+        "password": "1081",
+        "url": "王紫涵.html"
+      },
+      
+      "黎乐锴": {
+        "password": "1630",
+        "url": "黎乐锴.html"
+      },
+      
+      "蔡心宸": {
+        "password": "2119",
+        "url": "蔡心宸.html"
+      },
+      
+      "汤圆": {
+        "password": "6100",
+        "url": "汤圆.html"
+      },
+      
+      "杨煜辰": {
+        "password": "432",
+        "url": "杨煜辰.html"
+      },
+      
+      "周子乔": {
+        "password": "9151",
+        "url": "周子乔.html"
+      },
+      
+      "郑家睿": {
+        "password": "1993",
+        "url": "郑家睿.html"
+      },
+      
+      "韩牧野": {
+        "password": "3289",
+        "url": "韩牧野.html"
+      },
+      
+      "王诗云、王诗涵": {
+        "password": "8385",
+        "url": "王诗云、王诗涵.html"
+      },
+      
+      "张浩宇": {
+        "password": "6185",
+        "url": "张浩宇.html"
+      },
+      
+      "杜江舟": {
+        "password": "702",
+        "url": "杜江舟.html"
+      },
+      
+      "施敬庭": {
+        "password": "2960",
+        "url": "施敬庭.html"
+      },
+      
+      "覃诗琪": {
+        "password": "9372",
+        "url": "覃诗琪.html"
+      },
+      
+      "柯宥辛": {
+        "password": "9623",
+        "url": "柯宥辛.html"
+      },
+      
+      "李芠杰": {
+        "password": "9689",
+        "url": "李芠杰.html"
+      },
+      
+      "刘伟博": {
+        "password": "1314",
+        "url": "刘伟博.html"
+      },
+      
+      "曦曦": {
+        "password": "1667",
+        "url": "曦曦.html"
+      },
+      
+      "杨轶凯": {
+        "password": "6633",
+        "url": "杨轶凯.html"
+      },
+      
+      "伍明哲": {
+        "password": "9338",
+        "url": "伍明哲.html"
+      },
+      
+      "成家佳": {
+        "password": "1899",
+        "url": "成家佳.html"
+      },
+      
+      "杨敬庭": {
+        "password": "6021",
+        "url": "杨敬庭.html"
+      },
+      
+      "陈才": {
+        "password": "2133",
+        "url": "陈才.html"
+      },
+      
+      "熙凯": {
+        "password": "3020",
+        "url": "熙凯.html"
+      },
+      
+      "吴曾成语": {
+        "password": "970",
+        "url": "吴曾成语.html"
+      },
+      
+      "屈彧帆": {
+        "password": "2371",
+        "url": "屈彧帆.html"
+      },
+      
+      "陈浅川": {
+        "password": "9928",
+        "url": "陈浅川.html"
+      },
+      
+      "衣浩宇": {
+        "password": "9219",
+        "url": "衣浩宇.html"
+      },
+      
+      "田慧馨": {
+        "password": "6098",
+        "url": "田慧馨.html"
+      },
+      
+      "夏天": {
+        "password": "585",
+        "url": "夏天.html"
+      },
+      
+      "赵智杰": {
+        "password": "3061",
+        "url": "赵智杰.html"
+      },
+      
+      "彭逸遥": {
+        "password": "3959",
+        "url": "彭逸遥.html"
+      },
+      
+      "刘致远": {
+        "password": "8314",
+        "url": "刘致远.html"
+      },
+      
+      "雷名宇": {
+        "password": "8209",
+        "url": "雷名宇.html"
+      },
+      
+      "敖裕航": {
+        "password": "5325",
+        "url": "敖裕航.html"
+      },
+      
+      "罗瑾森": {
+        "password": "2175",
+        "url": "罗瑾森.html"
+      },
+      
+      "豆豆": {
+        "password": "3024",
+        "url": "豆豆.html"
+      },
+      
+      "辜祉颐": {
+        "password": "5686",
+        "url": "辜祉颐.html"
+      },
+      
+      "祁霖祁霁": {
+        "password": "1714",
+        "url": "祁霖祁霁.html"
+      },
+      
+      "沈千尧": {
+        "password": "6283",
+        "url": "沈千尧.html"
+      },
+      
+      "唐浩轩": {
+        "password": "5946",
+        "url": "唐浩轩.html"
+      },
+      
+      "芦佳钰": {
+        "password": "2269",
+        "url": "芦佳钰.html"
+      },
+      
+      "方泽仟": {
+        "password": "714",
+        "url": "方泽仟.html"
+      },
+      
+      "张梓珊": {
+        "password": "3659",
+        "url": "张梓珊.html"
+      },
+      
+      "李欣泽": {
+        "password": "8706",
+        "url": "李欣泽.html"
+      },
+      
+      "陈梓睿": {
+        "password": "5901",
+        "url": "陈梓睿.html"
+      },
+      
+      "龙思丞": {
+        "password": "2899",
+        "url": "龙思丞.html"
+      },
+      
+      "奇奇": {
+        "password": "36",
+        "url": "奇奇.html"
+      },
+      
+      "李宣儒": {
+        "password": "2006",
+        "url": "李宣儒.html"
+      },
+      
+      "杨东岳": {
+        "password": "2737",
+        "url": "杨东岳.html"
+      },
+      
+      "花似锦": {
+        "password": "3925",
+        "url": "花似锦.html"
+      },
+      
+      "王鹤翔": {
+        "password": "3168",
+        "url": "王鹤翔.html"
+      },
+      
+      "韩一睿": {
+        "password": "8665",
+        "url": "韩一睿.html"
+      },
+      
+      "徐承喆": {
+        "password": "6083",
+        "url": "徐承喆.html"
+      },
+      
+      "侯皓嘉": {
+        "password": "952",
+        "url": "侯皓嘉.html"
+      },
+      
+      "杨程煜": {
+        "password": "4322",
+        "url": "杨程煜.html"
+      },
+      
+      "谭宇轩": {
+        "password": "3236",
+        "url": "谭宇轩.html"
+      },
+      
+      "橙子": {
+        "password": "5901",
+        "url": "橙子.html"
+      },
+      
+      "陈诗沐娢": {
+        "password": "6333",
+        "url": "陈诗沐娢.html"
+      },
+      
+      "文瑞": {
+        "password": "2837",
+        "url": "文瑞.html"
+      },
+      
+      "王淯崟": {
+        "password": "7580",
+        "url": "王淯崟.html"
+      },
+      
+      "段奕成": {
+        "password": "6365",
+        "url": "段奕成.html"
+      },
+      
+      "周子昱": {
+        "password": "7083",
+        "url": "周子昱.html"
+      },
+      
+      "彭治霖": {
+        "password": "7096",
+        "url": "彭治霖.html"
+      },
+      
+      "任晞瑞": {
+        "password": "1044",
+        "url": "任晞瑞.html"
+      },
+      
+      "辛宇桐": {
+        "password": "2368",
+        "url": "辛宇桐.html"
+      },
+      
+      "潘子萱": {
+        "password": "9416",
+        "url": "潘子萱.html"
+      },
+      
+      "高玉来": {
+        "password": "8449",
+        "url": "高玉来.html"
+      },
+      
+      "唐梓轩": {
+        "password": "8893",
+        "url": "唐梓轩.html"
+      },
+      
+      "金诗然": {
+        "password": "2368",
+        "url": "金诗然.html"
+      },
+      
+      "刘柏壬": {
+        "password": "3135",
+        "url": "刘柏壬.html"
+      },
+      
+      "赵俊博": {
+        "password": "664",
+        "url": "赵俊博.html"
+      },
+      
+      "杭天": {
+        "password": "7253",
+        "url": "杭天.html"
+      },
+      
+      "周子淇": {
+        "password": "6598",
+        "url": "周子淇.html"
+      },
+      
+      "许梓翊": {
+        "password": "8331",
+        "url": "许梓翊.html"
+      },
+      
+      "范佩希": {
+        "password": "2289",
+        "url": "范佩希.html"
+      },
+      
+      "甄辰林": {
+        "password": "1711",
+        "url": "甄辰林.html"
+      },
+      
+      "王启明": {
+        "password": "1862",
+        "url": "王启明.html"
+      },
+      
+      "周子衿": {
+        "password": "1055",
+        "url": "周子衿.html"
+      },
+      
+      "张家奇": {
+        "password": "2648",
+        "url": "张家奇.html"
+      },
+      
+      "陈凯茜": {
+        "password": "333",
+        "url": "陈凯茜.html"
+      },
+      
+      "汪俊彦": {
+        "password": "2176",
+        "url": "汪俊彦.html"
+      },
+      
+      "果果": {
+        "password": "1831",
+        "url": "果果.html"
+      },
+      
+      "黎景南": {
+        "password": "5233",
+        "url": "黎景南.html"
+      },
+      
+      "林辰浩": {
+        "password": "2147",
+        "url": "林辰浩.html"
+      },
+      
+      "尤兴羽": {
+        "password": "191",
+        "url": "尤兴羽.html"
+      },
+      
+      "肖殷果": {
+        "password": "6787",
+        "url": "肖殷果.html"
+      },
+      
+      "李宝玥": {
+        "password": "7058",
+        "url": "李宝玥.html"
+      },
+      
+      "郭源少": {
+        "password": "8889",
+        "url": "郭源少.html"
+      },
+      
+      "睿宁": {
+        "password": "7952",
+        "url": "睿宁.html"
+      },
+      
+      "邓俊贤": {
+        "password": "7586",
+        "url": "邓俊贤.html"
+      },
+      
+      "沈力行": {
+        "password": "6887",
+        "url": "沈力行.html"
+      },
+      
+      "屈辰宇": {
+        "password": "2548",
+        "url": "屈辰宇.html"
+      },
+      
+      "钟素阅": {
+        "password": "8937",
+        "url": "钟素阅.html"
+      },
+      
+      "宋梓瑞": {
+        "password": "2588",
+        "url": "宋梓瑞.html"
+      },
+      
+      "黄锦城": {
+        "password": "9199",
+        "url": "黄锦城.html"
+      },
+      
+      "吴泽楷": {
+        "password": "5888",
+        "url": "吴泽楷.html"
+      },
+      
+      "廖韵茹": {
+        "password": "4618",
+        "url": "廖韵茹.html"
+      },
+      
+      "龙柏宇": {
+        "password": "7766",
+        "url": "龙柏宇.html"
+      },
+      
+      "陈谊": {
+        "password": "1720",
+        "url": "陈谊.html"
+      },
+      
+      "向辰昊": {
+        "password": "7789",
+        "url": "向辰昊.html"
+      },
+      
+      "周逸辰": {
+        "password": "7491",
+        "url": "周逸辰.html"
+      },
+      
+      "苗苗": {
+        "password": "4468",
+        "url": "苗苗.html"
+      },
+      
+      "郑子程": {
+        "password": "5019",
+        "url": "郑子程.html"
+      },
+      
+      "李依宸": {
+        "password": "3400",
+        "url": "李依宸.html"
+      },
+      
+      "益诚": {
+        "password": "3529",
+        "url": "益诚.html"
+      },
+      
+      "付仁俊": {
+        "password": "2983",
+        "url": "付仁俊.html"
+      },
+      
+      "桓荣": {
+        "password": "1129",
+        "url": "桓荣.html"
+      },
+      
+      "高嘉阳": {
+        "password": "5022",
+        "url": "高嘉阳.html"
+      },
+      
+      "冯予轩": {
+        "password": "1572",
+        "url": "冯予轩.html"
+      },
+      
+      "姚顺宇": {
+        "password": "4658",
+        "url": "姚顺宇.html"
+      },
+      
+      "高铎宸": {
+        "password": "8627",
+        "url": "高铎宸.html"
+      },
+      
+      "诗彤": {
+        "password": "1297",
+        "url": "诗彤.html"
+      },
+      
+      "周佛梁": {
+        "password": "8976",
+        "url": "周佛梁.html"
+      },
+      
+      "李殷瑜": {
+        "password": "2752",
+        "url": "李殷瑜.html"
+      },
+      
+      "陶则宇": {
+        "password": "2110",
+        "url": "陶则宇.html"
+      },
+      
+      "靳一鸣": {
+        "password": "5314",
+        "url": "靳一鸣.html"
+      },
+      
+      "李柯毅": {
+        "password": "8666",
+        "url": "李柯毅.html"
+      },
+      
+      "刘恩铭": {
+        "password": "468",
+        "url": "刘恩铭.html"
+      },
+      
+      "刘梓霖": {
+        "password": "4067",
+        "url": "刘梓霖.html"
+      },
+      
+      "月月": {
+        "password": "5778",
+        "url": "月月.html"
+      },
+      
+      "蔡梓信": {
+        "password": "7827",
+        "url": "蔡梓信.html"
+      },
+      
+      "王世泰": {
+        "password": "6591",
+        "url": "王世泰.html"
+      },
+      
+      "陈诗诗": {
+        "password": "3836",
+        "url": "陈诗诗.html"
+      },
+      
+      "王茂舒": {
+        "password": "2689",
+        "url": "王茂舒.html"
+      },
+      
+      "罗宇恒": {
+        "password": "6033",
+        "url": "罗宇恒.html"
+      },
+      
+      "要奕志": {
+        "password": "2736",
+        "url": "要奕志.html"
+      },
+      
+      "李浩然": {
+        "password": "1411",
+        "url": "李浩然.html"
+      },
+      
+      "宣奕民": {
+        "password": "2192",
+        "url": "宣奕民.html"
+      },
+      
+      "谭韵晗": {
+        "password": "970",
+        "url": "谭韵晗.html"
+      },
+      
+      "石函雨": {
+        "password": "8822",
+        "url": "石函雨.html"
+      },
+      
+      "蒋一铭": {
+        "password": "1595",
+        "url": "蒋一铭.html"
+      },
+      
+      "梁馨悦": {
+        "password": "9180",
+        "url": "梁馨悦.html"
+      },
+      
+      "顾浩楠": {
+        "password": "5842",
+        "url": "顾浩楠.html"
+      },
+      
+      "刘骥和": {
+        "password": "7252",
+        "url": "刘骥和.html"
+      },
+      
+      "李馨": {
+        "password": "3728",
+        "url": "李馨.html"
+      },
+      
+      "夏国锐": {
+        "password": "7686",
+        "url": "夏国锐.html"
+      },
+      
+      "伍彦诺": {
+        "password": "5655",
+        "url": "伍彦诺.html"
+      },
+      
+      "葛懿": {
+        "password": "1699",
+        "url": "葛懿.html"
+      },
+      
+      "丁圣恩": {
+        "password": "6788",
+        "url": "丁圣恩.html"
+      },
+      
+      "张杰懿": {
+        "password": "609",
+        "url": "张杰懿.html"
+      },
+      
+      "康熙晨": {
+        "password": "5926",
+        "url": "康熙晨.html"
+      },
+      
+      "程皓轩": {
+        "password": "8352",
+        "url": "程皓轩.html"
+      },
+      
+      "蔡天成": {
+        "password": "8806",
+        "url": "蔡天成.html"
+      },
+      
+      "朱禹霏": {
+        "password": "9763",
+        "url": "朱禹霏.html"
+      },
+      
+      "李建勋": {
+        "password": "3109",
+        "url": "李建勋.html"
+      },
+      
+      "烨华": {
+        "password": "9757",
+        "url": "烨华.html"
+      },
+      
+      "王相程": {
+        "password": "5916",
+        "url": "王相程.html"
+      },
+      
+      "赵峻辰": {
+        "password": "6599",
+        "url": "赵峻辰.html"
+      },
+      
+      "韦东辉": {
+        "password": "7938",
+        "url": "韦东辉.html"
+      },
+      
+      "图栎雅思": {
+        "password": "6159",
+        "url": "图栎雅思.html"
+      },
+      
+      "叶靖成、叶靖宇": {
+        "password": "3605",
+        "url": "叶靖成、叶靖宇.html"
+      },
+      
+      "张宇泽": {
+        "password": "4383",
+        "url": "张宇泽.html"
+      },
+      
+      "秦国程": {
+        "password": "8152",
+        "url": "秦国程.html"
+      },
+      
+      "刘米亚": {
+        "password": "5296",
+        "url": "刘米亚.html"
+      },
+      
+      "杨铠睿": {
+        "password": "2398",
+        "url": "杨铠睿.html"
+      },
+      
+      "王时雨": {
+        "password": "7678",
+        "url": "王时雨.html"
+      },
+      
+      "王俊颖": {
+        "password": "7558",
+        "url": "王俊颖.html"
+      },
+      
+      "田莘佑": {
+        "password": "9859",
+        "url": "田莘佑.html"
+      },
+      
+      "朱永晟": {
+        "password": "5829",
+        "url": "朱永晟.html"
+      },
+      
+      "杨佳萌": {
+        "password": "5040",
+        "url": "杨佳萌.html"
+      },
+      
+      "倪浤智": {
+        "password": "9198",
+        "url": "倪浤智.html"
+      }
+      
+    };
+
+    function login() {
+      const name = document.getElementById('nameInput').value.trim();
+      const pwd = document.getElementById('passwordInput').value;
+      const errorEl = document.getElementById('errorMsg');
+      if (studentMap[name] && studentMap[name].password === pwd) {
+        sessionStorage.setItem('growth_login', 'true');
+        sessionStorage.setItem('growth_name', name);
+        window.location.href = studentMap[name].url;
+      } else {
+        errorEl.style.display = 'block';
+      }
+    }
+    document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') login();
+    });
+    function changeBg() {
+      const url = prompt('请输入背景图片链接（留空恢复默认）');
+      if (url !== null) {
+        if (url.trim() === '') {
+          localStorage.removeItem('growth_bg');
+        } else {
+          localStorage.setItem('growth_bg', url.trim());
+        }
+        // 刷新当前页面背景
+        document.body.style.backgroundImage = url ? `url(${url})` : '';
+      }
+    }
+    // 页面加载时应用本地背景
+    (function() {
+      const savedBg = localStorage.getItem('growth_bg');
+      if (savedBg) document.body.style.backgroundImage = `url(${savedBg})`;
+    })();
+  </script>
+</body>
+</html>
