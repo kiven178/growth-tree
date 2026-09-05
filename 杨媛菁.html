@@ -23,8 +23,9 @@
     .total-title { font-size: 10px; background: #ffe0b5; border-radius: 20px; padding: 2px 6px; margin-top: 4px; color: #b45f06; }
     .tree-list { display: flex; flex-direction: column; gap: 28px; margin: 20px 0; }
     .tree-card { background: rgba(255,255,250,0.8); backdrop-filter: blur(4px); border-radius: 36px; padding: 16px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .tree-img-container { position: relative; width: 180px; flex-shrink: 0; }
-    .tree-bg { width: 100%; height: auto; display: block; border-radius: 20px; }
+    .tree-img-container { position: relative; width: 180px; flex-shrink: 0; cursor: pointer; }
+    .tree-bg { width: 100%; height: auto; display: block; border-radius: 20px; transition: transform 0.2s ease; }
+    .tree-bg:hover { transform: scale(1.02); }
     .tree-info { flex: 1; min-width: 150px; }
     .tree-name { font-size: 18px; font-weight: bold; color: #3e2723; margin-bottom: 6px; display: inline-block; }
     .category-title { font-size: 14px; background: #ffe0b5; display: inline-block; padding: 4px 10px; border-radius: 30px; font-weight: bold; float: right; }
@@ -67,6 +68,28 @@
       transition: transform 0.2s;
     }
     .secret-letter:hover { transform: scale(1.1); }
+
+    /* 大图预览样式 */
+    .big-image-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .big-image-container img {
+      max-width: 100%;
+      max-height: 70vh;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .big-image-container .hint-text {
+      margin-top: 12px;
+      font-size: 16px;
+      color: #666;
+      background: #fff9c4;
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
@@ -108,12 +131,12 @@
 
   <script>
     const pagePwd = "7366";
-    const version = "20260902230501";
+    const version = "20260905152007";
     const eggIcon = "🥚";
     const dinoIcon = "🐾";
     const globalLatestId = 1;
     // 如果 lesson_history 未定义，设为空对象，防止报错
-    const lessonHistory = {"1": {"homework_link": "https://doc.weixin.qq.com/forms/ACQA7Qc2AAYARwAGQYXAHkCNTIcrx7l2f?page=30", "knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "wrong_videos": "245"}};
+    const lessonHistory = {"1": {"homework_link": "https://v.wjx.cn/vm/QUlPA0t.aspx", "knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "wrong_videos": "245"}};
 
     // 统一使用 growth_login
     if (sessionStorage.getItem('forest_login') === 'true') {
@@ -168,6 +191,19 @@
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(Math.round(percent*100)+"%", center, center);
+    }
+
+    // ========== 显示大图 ==========
+    function showBigImage(imageSrc, categoryName) {
+      const hintText = categoryName ? `🌳 ${categoryName} · 猜一猜下一个角色是什么吧！` : '👀 点击查看大图，猜一猜下一个角色是什么吧！';
+      const html = `
+        <div class="big-image-container">
+          <img src="${imageSrc}" alt="分类背景图" onerror="this.src='${imageSrc}'; this.alt='图片加载失败';">
+          <div class="hint-text">💡 ${hintText}</div>
+        </div>
+      `;
+      document.getElementById('modalContent').innerHTML = html;
+      document.getElementById('fruitModal').style.display = 'flex';
     }
 
     // ========== 显示课后作业 ==========
@@ -320,9 +356,12 @@
 
         const card = document.createElement('div');
         card.className = 'tree-card';
+        // 为图片添加 title 和 onclick，实现气泡提示和点击查看大图
+        const fogImageSrc = cat.fog_image;
+        const categoryName = cat.name;
         card.innerHTML = `
-          <div class="tree-img-container">
-            <img class="tree-bg" src="${cat.fog_image}" alt="${cat.name}">
+          <div class="tree-img-container" onclick="showBigImage('${fogImageSrc}', '${categoryName}')">
+            <img class="tree-bg" src="${fogImageSrc}" alt="${categoryName}" title="点击查看大图，猜一猜下一个角色是什么吧！">
           </div>
           <div class="tree-info">
             <div>

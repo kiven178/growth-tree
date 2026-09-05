@@ -23,8 +23,9 @@
     .total-title { font-size: 10px; background: #ffe0b5; border-radius: 20px; padding: 2px 6px; margin-top: 4px; color: #b45f06; }
     .tree-list { display: flex; flex-direction: column; gap: 28px; margin: 20px 0; }
     .tree-card { background: rgba(255,255,250,0.8); backdrop-filter: blur(4px); border-radius: 36px; padding: 16px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .tree-img-container { position: relative; width: 180px; flex-shrink: 0; }
-    .tree-bg { width: 100%; height: auto; display: block; border-radius: 20px; }
+    .tree-img-container { position: relative; width: 180px; flex-shrink: 0; cursor: pointer; }
+    .tree-bg { width: 100%; height: auto; display: block; border-radius: 20px; transition: transform 0.2s ease; }
+    .tree-bg:hover { transform: scale(1.02); }
     .tree-info { flex: 1; min-width: 150px; }
     .tree-name { font-size: 18px; font-weight: bold; color: #3e2723; margin-bottom: 6px; display: inline-block; }
     .category-title { font-size: 14px; background: #ffe0b5; display: inline-block; padding: 4px 10px; border-radius: 30px; font-weight: bold; float: right; }
@@ -67,6 +68,28 @@
       transition: transform 0.2s;
     }
     .secret-letter:hover { transform: scale(1.1); }
+
+    /* 大图预览样式 */
+    .big-image-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .big-image-container img {
+      max-width: 100%;
+      max-height: 70vh;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .big-image-container .hint-text {
+      margin-top: 12px;
+      font-size: 16px;
+      color: #666;
+      background: #fff9c4;
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
@@ -108,12 +131,12 @@
 
   <script>
     const pagePwd = "8376";
-    const version = "20260902230501";
+    const version = "20260905152007";
     const eggIcon = "🥚";
     const dinoIcon = "🐠";
-    const globalLatestId = 1;
+    const globalLatestId = 2;
     // 如果 lesson_history 未定义，设为空对象，防止报错
-    const lessonHistory = {"1": {"homework_link": "https://doc.weixin.qq.com/forms/ACQA7Qc2AAYARwAGQYXAHkCNTIcrx7l2f?page=36", "knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "wrong_videos": "5"}};
+    const lessonHistory = {"1": {"homework_link": "https://doc.weixin.qq.com/forms/ACQA7Qc2AAYARwAGQYXAHkCNTIcrx7l2f?page=36", "knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "wrong_videos": "5"}, "2": {"homework_link": "https://v.wjx.cn/vm/QUlPA0t.aspx", "knowledge": "\u2460max()\u547d\u4ee4\u53ef\u4ee5\u6c42\u51fa\u6700\u5927\u503c\n\u4f8b\uff1al = [1,7,2,5]\na = max(l)\nprint(a)\n#\u8f93\u51fa\u6700\u5927\u7684\u6570\u5b57\uff1a7 \n\u2461min()\u547d\u4ee4\u4e0emax()\u76f8\u53cd\uff0c\u7528\u6765\u6c42\u51fa\u6700\u5c0f\u503c\n\u2462index()\u547d\u4ee4\u8fd4\u56de\u76ee\u6807\u3010\u7b2c\u4e00\u6b21\u3011\u51fa\u73b0\u7684\u4f4d\u7f6e\u3010\u7d22\u5f15\u3011\uff0c\u5982\uff1a\nlst = [\"\u82f9\u679c\",\"\u9999\u8549\",\"\u6a59\u5b50\"] \nprint(lst.index(\"\u9999\u8549\")) \n#\u8f93\u51fa\uff1a1\uff0c\u9999\u8549\u7b2c\u4e00\u6b21\u51fa\u73b0\u7684\u4f4d\u7f6e\u662f\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\uff0c\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\u7684\u7d22\u5f15\u4e3a2-1=1", "wrong_videos": "134"}};
 
     // 统一使用 growth_login
     if (sessionStorage.getItem('forest_login') === 'true') {
@@ -132,7 +155,7 @@
       }
     }
 
-    const categoriesRaw = [{"fog_image": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/fog/\u7901\u77f3\u533a/1.png", "fog_image_base": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/fog/\u7901\u77f3\u533a", "habitat": "\u7901\u77f3\u533a", "latest_node": {"detail": {"knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "mistake": "\u7b2c5\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "split\u547d\u4ee4", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/1/5.mp4"]}, "dino_intro": "\u6d77\u661f\u6709\u4e94\u4e2a\u8155\u8db3\uff0c\u80fd\u518d\u751f\u65ad\u80a2\uff0c\u5982\u679c\u5931\u53bb\u4e00\u4e2a\u8155\u8db3\uff0c\u5f88\u5feb\u4f1a\u957f\u51fa\u65b0\u7684\uff0c\u662f\u795e\u5947\u7684\u6d77\u6d0b\u751f\u7269\u3002\u6d77\u661f\u4e0d\u662f\u9c7c\uff0c\u800c\u662f\u68d8\u76ae\u52a8\u7269\uff0c\u5b83\u4eec\u7528\u7ba1\u8db3\u884c\u8d70\uff0c\u4ee5\u8d1d\u7c7b\u4e3a\u98df\u3002", "dino_name": "\u6d77\u661f", "id": 1, "status": "completed"}, "learned_count": 1, "learned_details": [{"detail": {"knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "mistake": "\u7b2c5\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "split\u547d\u4ee4", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/1/5.mp4"]}, "dino_intro": "\u6d77\u661f\u6709\u4e94\u4e2a\u8155\u8db3\uff0c\u80fd\u518d\u751f\u65ad\u80a2\uff0c\u5982\u679c\u5931\u53bb\u4e00\u4e2a\u8155\u8db3\uff0c\u5f88\u5feb\u4f1a\u957f\u51fa\u65b0\u7684\uff0c\u662f\u795e\u5947\u7684\u6d77\u6d0b\u751f\u7269\u3002\u6d77\u661f\u4e0d\u662f\u9c7c\uff0c\u800c\u662f\u68d8\u76ae\u52a8\u7269\uff0c\u5b83\u4eec\u7528\u7ba1\u8db3\u884c\u8d70\uff0c\u4ee5\u8d1d\u7c7b\u4e3a\u98df\u3002", "dino_name": "\u6d77\u661f", "id": 1, "status": "completed"}], "name": "\u7901\u77f3\u533a", "next_id": 6, "style": {"name": "\u7901\u77f3\u533a"}, "title": "\ud83d\udc1a \u7901\u77f3\u65b0\u79c0", "total": 2}, {"fog_image": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/fog/\u5947\u5f02\u9c7c/0.png", "fog_image_base": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/fog/\u5947\u5f02\u9c7c", "habitat": "\u5947\u5f02\u9c7c", "latest_node": null, "learned_count": 0, "learned_details": [], "name": "\u5947\u5f02\u9c7c", "next_id": 2, "style": {"name": "\u5947\u5f02\u9c7c"}, "title": "\ud83e\udd5a \u86cb\u58f3\u65b0\u661f", "total": 5}];
+    const categoriesRaw = [{"fog_image": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/fog/\u7901\u77f3\u533a/1.png", "fog_image_base": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/fog/\u7901\u77f3\u533a", "habitat": "\u7901\u77f3\u533a", "latest_node": {"detail": {"knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "mistake": "\u7b2c5\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "split\u547d\u4ee4", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/1/5.mp4"]}, "dino_intro": "\u6d77\u661f\u6709\u4e94\u4e2a\u8155\u8db3\uff0c\u80fd\u518d\u751f\u65ad\u80a2\uff0c\u5982\u679c\u5931\u53bb\u4e00\u4e2a\u8155\u8db3\uff0c\u5f88\u5feb\u4f1a\u957f\u51fa\u65b0\u7684\uff0c\u662f\u795e\u5947\u7684\u6d77\u6d0b\u751f\u7269\u3002\u6d77\u661f\u4e0d\u662f\u9c7c\uff0c\u800c\u662f\u68d8\u76ae\u52a8\u7269\uff0c\u5b83\u4eec\u7528\u7ba1\u8db3\u884c\u8d70\uff0c\u4ee5\u8d1d\u7c7b\u4e3a\u98df\u3002", "dino_name": "\u6d77\u661f", "id": 1, "status": "completed"}, "learned_count": 1, "learned_details": [{"detail": {"knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "mistake": "\u7b2c5\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "split\u547d\u4ee4", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/1/5.mp4"]}, "dino_intro": "\u6d77\u661f\u6709\u4e94\u4e2a\u8155\u8db3\uff0c\u80fd\u518d\u751f\u65ad\u80a2\uff0c\u5982\u679c\u5931\u53bb\u4e00\u4e2a\u8155\u8db3\uff0c\u5f88\u5feb\u4f1a\u957f\u51fa\u65b0\u7684\uff0c\u662f\u795e\u5947\u7684\u6d77\u6d0b\u751f\u7269\u3002\u6d77\u661f\u4e0d\u662f\u9c7c\uff0c\u800c\u662f\u68d8\u76ae\u52a8\u7269\uff0c\u5b83\u4eec\u7528\u7ba1\u8db3\u884c\u8d70\uff0c\u4ee5\u8d1d\u7c7b\u4e3a\u98df\u3002", "dino_name": "\u6d77\u661f", "id": 1, "status": "completed"}], "name": "\u7901\u77f3\u533a", "next_id": 6, "style": {"name": "\u7901\u77f3\u533a"}, "title": "\ud83d\udc1a \u7901\u77f3\u65b0\u79c0", "total": 2}, {"fog_image": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/fog/\u5947\u5f02\u9c7c/1.png", "fog_image_base": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/fog/\u5947\u5f02\u9c7c", "habitat": "\u5947\u5f02\u9c7c", "latest_node": {"detail": {"knowledge": "\u2460max()\u547d\u4ee4\u53ef\u4ee5\u6c42\u51fa\u6700\u5927\u503c\n\u4f8b\uff1al = [1,7,2,5]\na = max(l)\nprint(a)\n#\u8f93\u51fa\u6700\u5927\u7684\u6570\u5b57\uff1a7 \n\u2461min()\u547d\u4ee4\u4e0emax()\u76f8\u53cd\uff0c\u7528\u6765\u6c42\u51fa\u6700\u5c0f\u503c\n\u2462index()\u547d\u4ee4\u8fd4\u56de\u76ee\u6807\u3010\u7b2c\u4e00\u6b21\u3011\u51fa\u73b0\u7684\u4f4d\u7f6e\u3010\u7d22\u5f15\u3011\uff0c\u5982\uff1a\nlst = [\"\u82f9\u679c\",\"\u9999\u8549\",\"\u6a59\u5b50\"] \nprint(lst.index(\"\u9999\u8549\")) \n#\u8f93\u51fa\uff1a1\uff0c\u9999\u8549\u7b2c\u4e00\u6b21\u51fa\u73b0\u7684\u4f4d\u7f6e\u662f\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\uff0c\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\u7684\u7d22\u5f15\u4e3a2-1=1", "mistake": "\u7b2c1,3,4\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "\u67e5\u627e\u7b97\u6cd5", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/2/1.mp4", "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/2/3.mp4", "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/2/4.mp4"]}, "dino_intro": "\u7ffb\u8f66\u9c7c\u4f53\u578b\u5e9e\u5927\uff0c\u6e38\u6cf3\u59ff\u6001\u7b28\u62d9\uff0c\u4f46\u5f88\u6e29\u987a\uff0c\u662f\u6d77\u6d0b\u4e2d\u7684\u0027\u61d2\u6d0b\u6d0b\u0027\u3002\u7ffb\u8f66\u9c7c\u662f\u4e16\u754c\u4e0a\u6700\u5927\u7684\u786c\u9aa8\u9c7c\uff0c\u8eab\u957f\u53ef\u8fbe3\u7c73\uff0c\u5b83\u559c\u6b22\u6652\u592a\u9633\uff0c\u6d6e\u5728\u6d77\u9762\u4e0a\u3002", "dino_name": "\u7ffb\u8f66\u9c7c", "id": 2, "status": "completed"}, "learned_count": 1, "learned_details": [{"detail": {"knowledge": "\u2460max()\u547d\u4ee4\u53ef\u4ee5\u6c42\u51fa\u6700\u5927\u503c\n\u4f8b\uff1al = [1,7,2,5]\na = max(l)\nprint(a)\n#\u8f93\u51fa\u6700\u5927\u7684\u6570\u5b57\uff1a7 \n\u2461min()\u547d\u4ee4\u4e0emax()\u76f8\u53cd\uff0c\u7528\u6765\u6c42\u51fa\u6700\u5c0f\u503c\n\u2462index()\u547d\u4ee4\u8fd4\u56de\u76ee\u6807\u3010\u7b2c\u4e00\u6b21\u3011\u51fa\u73b0\u7684\u4f4d\u7f6e\u3010\u7d22\u5f15\u3011\uff0c\u5982\uff1a\nlst = [\"\u82f9\u679c\",\"\u9999\u8549\",\"\u6a59\u5b50\"] \nprint(lst.index(\"\u9999\u8549\")) \n#\u8f93\u51fa\uff1a1\uff0c\u9999\u8549\u7b2c\u4e00\u6b21\u51fa\u73b0\u7684\u4f4d\u7f6e\u662f\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\uff0c\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\u7684\u7d22\u5f15\u4e3a2-1=1", "mistake": "\u7b2c1,3,4\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "\u67e5\u627e\u7b97\u6cd5", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/2/1.mp4", "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/2/3.mp4", "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/2/4.mp4"]}, "dino_intro": "\u7ffb\u8f66\u9c7c\u4f53\u578b\u5e9e\u5927\uff0c\u6e38\u6cf3\u59ff\u6001\u7b28\u62d9\uff0c\u4f46\u5f88\u6e29\u987a\uff0c\u662f\u6d77\u6d0b\u4e2d\u7684\u0027\u61d2\u6d0b\u6d0b\u0027\u3002\u7ffb\u8f66\u9c7c\u662f\u4e16\u754c\u4e0a\u6700\u5927\u7684\u786c\u9aa8\u9c7c\uff0c\u8eab\u957f\u53ef\u8fbe3\u7c73\uff0c\u5b83\u559c\u6b22\u6652\u592a\u9633\uff0c\u6d6e\u5728\u6d77\u9762\u4e0a\u3002", "dino_name": "\u7ffb\u8f66\u9c7c", "id": 2, "status": "completed"}], "name": "\u5947\u5f02\u9c7c", "next_id": 3, "style": {"name": "\u5947\u5f02\u9c7c"}, "title": "\ud83d\udc1f \u5947\u5f02\u65b0\u79c0", "total": 5}];
     let categories = [];
     let musicPlaying = false;
     const bgMusic = document.getElementById('bgMusic');
@@ -168,6 +191,19 @@
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(Math.round(percent*100)+"%", center, center);
+    }
+
+    // ========== 显示大图 ==========
+    function showBigImage(imageSrc, categoryName) {
+      const hintText = categoryName ? `🌳 ${categoryName} · 猜一猜下一个角色是什么吧！` : '👀 点击查看大图，猜一猜下一个角色是什么吧！';
+      const html = `
+        <div class="big-image-container">
+          <img src="${imageSrc}" alt="分类背景图" onerror="this.src='${imageSrc}'; this.alt='图片加载失败';">
+          <div class="hint-text">💡 ${hintText}</div>
+        </div>
+      `;
+      document.getElementById('modalContent').innerHTML = html;
+      document.getElementById('fruitModal').style.display = 'flex';
     }
 
     // ========== 显示课后作业 ==========
@@ -320,9 +356,12 @@
 
         const card = document.createElement('div');
         card.className = 'tree-card';
+        // 为图片添加 title 和 onclick，实现气泡提示和点击查看大图
+        const fogImageSrc = cat.fog_image;
+        const categoryName = cat.name;
         card.innerHTML = `
-          <div class="tree-img-container">
-            <img class="tree-bg" src="${cat.fog_image}" alt="${cat.name}">
+          <div class="tree-img-container" onclick="showBigImage('${fogImageSrc}', '${categoryName}')">
+            <img class="tree-bg" src="${fogImageSrc}" alt="${categoryName}" title="点击查看大图，猜一猜下一个角色是什么吧！">
           </div>
           <div class="tree-info">
             <div>
