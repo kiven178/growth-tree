@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>睿宁的海洋王国</title>
+  <title>睿宁的花园</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #e9f5e9; font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif; padding: 20px 12px 90px; min-height: 100vh; position: relative; }
@@ -23,8 +23,9 @@
     .total-title { font-size: 10px; background: #ffe0b5; border-radius: 20px; padding: 2px 6px; margin-top: 4px; color: #b45f06; }
     .tree-list { display: flex; flex-direction: column; gap: 28px; margin: 20px 0; }
     .tree-card { background: rgba(255,255,250,0.8); backdrop-filter: blur(4px); border-radius: 36px; padding: 16px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .tree-img-container { position: relative; width: 180px; flex-shrink: 0; }
-    .tree-bg { width: 100%; height: auto; display: block; border-radius: 20px; }
+    .tree-img-container { position: relative; width: 180px; flex-shrink: 0; cursor: pointer; }
+    .tree-bg { width: 100%; height: auto; display: block; border-radius: 20px; transition: transform 0.2s ease; }
+    .tree-bg:hover { transform: scale(1.02); }
     .tree-info { flex: 1; min-width: 150px; }
     .tree-name { font-size: 18px; font-weight: bold; color: #3e2723; margin-bottom: 6px; display: inline-block; }
     .category-title { font-size: 14px; background: #ffe0b5; display: inline-block; padding: 4px 10px; border-radius: 30px; font-weight: bold; float: right; }
@@ -67,6 +68,28 @@
       transition: transform 0.2s;
     }
     .secret-letter:hover { transform: scale(1.1); }
+
+    /* 大图预览样式 */
+    .big-image-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .big-image-container img {
+      max-width: 100%;
+      max-height: 70vh;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .big-image-container .hint-text {
+      margin-top: 12px;
+      font-size: 16px;
+      color: #666;
+      background: #fff9c4;
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
@@ -74,7 +97,7 @@
   <!-- 登录遮罩 -->
   <div id="loginOverlay" class="login-overlay">
     <div style="background:white;padding:25px;border-radius:20px;text-align:center;width:260px;">
-      <h3 style="color:#2e7d32;">🌳 睿宁的海洋王国</h3>
+      <h3 style="color:#2e7d32;">🌳 睿宁的花园</h3>
       <p>请输入成长密码</p>
       <input type="password" id="pagePwdInput" placeholder="密码" style="width:100%;padding:10px;margin:10px 0;border-radius:8px;border:1px solid #ccc;">
       <div id="pagePwdError" style="color:red;display:none;">密码错误</div>
@@ -91,9 +114,9 @@
     <div class="forest">
       <div class="forest-header">
         <div class="avatar"><img src="https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/head/小核桃.png" alt="头像"></div>
-        <h1><span class="title-prefix">🌱 小萌新</span> 睿宁的海洋王国</h1>
+        <h1><span class="title-prefix">🌱 小萌新</span> 睿宁的花园</h1>
         <div class="theme-story">📖 🐠 在蔚蓝的海洋里，每学会一个技能就能遇见一种新的海洋生物！</div>
-        <div class="guide-text">✨ 点击海洋生物图标，认识新朋友！ ✨</div>
+        <div class="guide-text">✨ 点击花朵图标，认识新花！ ✨</div>
       </div>
       <div class="tree-list" id="treeList"></div>
       
@@ -108,9 +131,9 @@
 
   <script>
     const pagePwd = "7952";
-    const version = "20260902230501";
-    const eggIcon = "🥚";
-    const dinoIcon = "🐠";
+    const version = "20260905152007";
+    const eggIcon = "🌱";
+    const dinoIcon = "🌸";
     const globalLatestId = 1;
     // 如果 lesson_history 未定义，设为空对象，防止报错
     const lessonHistory = {"1": {"homework_link": "https://doc.weixin.qq.com/forms/ACQA7Qc2AAYARwAGQYXAHkCNTIcrx7l2f?page=130", "knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "wrong_videos": ""}};
@@ -132,7 +155,7 @@
       }
     }
 
-    const categoriesRaw = [{"fog_image": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/fog/\u7901\u77f3\u533a/1.png", "fog_image_base": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/fog/\u7901\u77f3\u533a", "habitat": "\u7901\u77f3\u533a", "latest_node": {"detail": {"knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "mistake": "", "title": "split\u547d\u4ee4", "wrong_videos": []}, "dino_intro": "\u6d77\u661f\u6709\u4e94\u4e2a\u8155\u8db3\uff0c\u80fd\u518d\u751f\u65ad\u80a2\uff0c\u5982\u679c\u5931\u53bb\u4e00\u4e2a\u8155\u8db3\uff0c\u5f88\u5feb\u4f1a\u957f\u51fa\u65b0\u7684\uff0c\u662f\u795e\u5947\u7684\u6d77\u6d0b\u751f\u7269\u3002\u6d77\u661f\u4e0d\u662f\u9c7c\uff0c\u800c\u662f\u68d8\u76ae\u52a8\u7269\uff0c\u5b83\u4eec\u7528\u7ba1\u8db3\u884c\u8d70\uff0c\u4ee5\u8d1d\u7c7b\u4e3a\u98df\u3002", "dino_name": "\u6d77\u661f", "id": 1, "status": "completed"}, "learned_count": 1, "learned_details": [{"detail": {"knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "mistake": "", "title": "split\u547d\u4ee4", "wrong_videos": []}, "dino_intro": "\u6d77\u661f\u6709\u4e94\u4e2a\u8155\u8db3\uff0c\u80fd\u518d\u751f\u65ad\u80a2\uff0c\u5982\u679c\u5931\u53bb\u4e00\u4e2a\u8155\u8db3\uff0c\u5f88\u5feb\u4f1a\u957f\u51fa\u65b0\u7684\uff0c\u662f\u795e\u5947\u7684\u6d77\u6d0b\u751f\u7269\u3002\u6d77\u661f\u4e0d\u662f\u9c7c\uff0c\u800c\u662f\u68d8\u76ae\u52a8\u7269\uff0c\u5b83\u4eec\u7528\u7ba1\u8db3\u884c\u8d70\uff0c\u4ee5\u8d1d\u7c7b\u4e3a\u98df\u3002", "dino_name": "\u6d77\u661f", "id": 1, "status": "completed"}], "name": "\u7901\u77f3\u533a", "next_id": 6, "style": {"name": "\u7901\u77f3\u533a"}, "title": "\ud83d\udc1a \u7901\u77f3\u65b0\u79c0", "total": 2}, {"fog_image": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/fog/\u5947\u5f02\u9c7c/0.png", "fog_image_base": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/fog/\u5947\u5f02\u9c7c", "habitat": "\u5947\u5f02\u9c7c", "latest_node": null, "learned_count": 0, "learned_details": [], "name": "\u5947\u5f02\u9c7c", "next_id": 2, "style": {"name": "\u5947\u5f02\u9c7c"}, "title": "\ud83e\udd5a \u86cb\u58f3\u65b0\u661f", "total": 5}];
+    const categoriesRaw = [{"fog_image": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/flower/fog/\u6c34\u4e2d\u82b1/1.png", "fog_image_base": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/flower/fog/\u6c34\u4e2d\u82b1", "habitat": "\u6c34\u4e2d\u82b1", "latest_node": {"detail": {"knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "mistake": "", "title": "split\u547d\u4ee4", "wrong_videos": []}, "dino_intro": "\u8377\u82b1\u51fa\u6de4\u6ce5\u800c\u4e0d\u67d3\uff0c\u82b1\u6735\u7c89\u5ae9\uff0c\u662f\u590f\u5929\u7684\u4f7f\u8005\u3002\u8377\u82b1\u7684\u830e\u4e2d\u901a\u5916\u76f4\uff0c\u80fd\u5728\u6c34\u4e0b\u7684\u6de4\u6ce5\u4e2d\u751f\u957f\uff0c\u53f6\u7247\u5bbd\u5927\uff0c\u50cf\u4e00\u628a\u7eff\u4f1e\u3002\u8377\u82b1\u8c61\u5f81\u7740\u9ad8\u6d01\u7684\u54c1\u683c\uff0c\u662f\u4e2d\u56fd\u7684\u5341\u5927\u540d\u82b1\u4e4b\u4e00\u3002", "dino_name": "\u8377\u82b1", "id": 1, "status": "completed"}, "learned_count": 1, "learned_details": [{"detail": {"knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "mistake": "", "title": "split\u547d\u4ee4", "wrong_videos": []}, "dino_intro": "\u8377\u82b1\u51fa\u6de4\u6ce5\u800c\u4e0d\u67d3\uff0c\u82b1\u6735\u7c89\u5ae9\uff0c\u662f\u590f\u5929\u7684\u4f7f\u8005\u3002\u8377\u82b1\u7684\u830e\u4e2d\u901a\u5916\u76f4\uff0c\u80fd\u5728\u6c34\u4e0b\u7684\u6de4\u6ce5\u4e2d\u751f\u957f\uff0c\u53f6\u7247\u5bbd\u5927\uff0c\u50cf\u4e00\u628a\u7eff\u4f1e\u3002\u8377\u82b1\u8c61\u5f81\u7740\u9ad8\u6d01\u7684\u54c1\u683c\uff0c\u662f\u4e2d\u56fd\u7684\u5341\u5927\u540d\u82b1\u4e4b\u4e00\u3002", "dino_name": "\u8377\u82b1", "id": 1, "status": "completed"}], "name": "\u6c34\u4e2d\u82b1", "next_id": 6, "style": {"name": "\u6c34\u4e2d\u82b1"}, "title": "\ud83d\udca7 \u6c34\u4e2d\u65b0\u79c0", "total": 2}, {"fog_image": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/flower/fog/\u7530\u91ce\u82b1/0.png", "fog_image_base": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/flower/fog/\u7530\u91ce\u82b1", "habitat": "\u7530\u91ce\u82b1", "latest_node": null, "learned_count": 0, "learned_details": [], "name": "\u7530\u91ce\u82b1", "next_id": 2, "style": {"name": "\u7530\u91ce\u82b1"}, "title": "\ud83e\udd5a \u86cb\u58f3\u65b0\u661f", "total": 5}];
     let categories = [];
     let musicPlaying = false;
     const bgMusic = document.getElementById('bgMusic');
@@ -170,6 +193,19 @@
       ctx.fillText(Math.round(percent*100)+"%", center, center);
     }
 
+    // ========== 显示大图 ==========
+    function showBigImage(imageSrc, categoryName) {
+      const hintText = categoryName ? `🌳 ${categoryName} · 猜一猜下一个角色是什么吧！` : '👀 点击查看大图，猜一猜下一个角色是什么吧！';
+      const html = `
+        <div class="big-image-container">
+          <img src="${imageSrc}" alt="分类背景图" onerror="this.src='${imageSrc}'; this.alt='图片加载失败';">
+          <div class="hint-text">💡 ${hintText}</div>
+        </div>
+      `;
+      document.getElementById('modalContent').innerHTML = html;
+      document.getElementById('fruitModal').style.display = 'flex';
+    }
+
     // ========== 显示课后作业 ==========
     function showHomework() {
       const currentLessonKey = String(globalLatestId);
@@ -200,11 +236,11 @@
     function showDinoModal(node) {
       const dinoName = node.dino_name;
       const intro = node.dino_intro;
-      const imageUrl = `https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/main/${node.id}-${node.dino_name}.png`;
+      const imageUrl = `https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/flower/main/${node.id}-${node.dino_name}.png`;
       const html = `
         <div style="text-align:center;">
           <h2 style="color:#2e7d32;">${dinoIcon} ${dinoName}</h2>
-          <img src="${imageUrl}" class="new-dino-img" onerror="this.src='https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/main/default.png'">
+          <img src="${imageUrl}" class="new-dino-img" onerror="this.src='https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/flower/main/default.png'">
           <div class="dino-intro">${intro}</div>
         </div>
       `;
@@ -267,7 +303,7 @@
     function showEncyclopedia(cat) {
       const unlockedDinos = cat.learned_details.map(node => `
         <div style="display:inline-block; margin:8px; text-align:center; cursor:pointer;" onclick="showDinoModalById(${node.id}, '${cat.name}')">
-          <img src="https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/main/${node.id}-${node.dino_name}.png" style="width:100px; border-radius:16px;" onerror="this.src='https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/ocean/main/default.png'">
+          <img src="https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/flower/main/${node.id}-${node.dino_name}.png" style="width:100px; border-radius:16px;" onerror="this.src='https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/flower/main/default.png'">
           <div>${node.dino_name}</div>
         </div>
       `).join('');
@@ -320,9 +356,12 @@
 
         const card = document.createElement('div');
         card.className = 'tree-card';
+        // 为图片添加 title 和 onclick，实现气泡提示和点击查看大图
+        const fogImageSrc = cat.fog_image;
+        const categoryName = cat.name;
         card.innerHTML = `
-          <div class="tree-img-container">
-            <img class="tree-bg" src="${cat.fog_image}" alt="${cat.name}">
+          <div class="tree-img-container" onclick="showBigImage('${fogImageSrc}', '${categoryName}')">
+            <img class="tree-bg" src="${fogImageSrc}" alt="${categoryName}" title="点击查看大图，猜一猜下一个角色是什么吧！">
           </div>
           <div class="tree-info">
             <div>
