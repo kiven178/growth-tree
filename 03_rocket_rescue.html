@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python 火箭救援任务</title>
+    <style>
+        :root {
+            --primary-color: #306998;
+            --secondary-color: #FFD43B;
+            --accent-color: #4caf50;
+            --danger-color: #f44336;
+            --bg-color: #1a1a2e;
+            --ui-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            user-select: none;
+        }
+
+        #game-container {
+            position: relative;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+        }
+
+        canvas {
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            border-radius: 8px;
+            background-color: transparent;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #hud {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        #message-popup {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid var(--secondary-color);
+            border-radius: 15px;
+            padding: 15px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            display: none;
+            pointer-events: auto;
+            z-index: 10;
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            from { transform: translateX(-50%) scale(0.8); opacity: 0; }
+            to { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+
+        .code-block {
+            font-family: 'Courier New', Courier, monospace;
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: left;
+            font-size: 1rem;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        #control-panel {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 150px;
+        }
+
+        #options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: linear-gradient(145deg, #34495e, #2c3e50);
+            border: 1px solid #4a6278;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+            touch-action: manipulation;
+        }
+
+        .option-btn:active {
+            transform: scale(0.95);
+        }
+
+        .option-btn.correct {
+            background: var(--accent-color) !important;
+            border-color: #2e7d32;
+        }
+
+        .option-btn.wrong {
+            background: var(--danger-color) !important;
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .screen-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 12, 41, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            pointer-events: auto;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 { color: var(--secondary-color); margin-bottom: 10px; font-size: 2.5rem; }
+        p { font-size: 1.1rem; line-height: 1.6; max-width: 500px; color: #ccc; }
+
+        .big-btn {
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, var(--primary-color), #4285f4);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.4);
+            transition: transform 0.2s;
+        }
+        .big-btn:hover { transform: scale(1.05); }
+
+        #achievement-toast {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+            z-index: 200;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="ui-layer">
+            <div id="hud">
+                <div>分数: <span id="score-display">0</span> / 100</div>
+                <div>等级: <span id="level-display">1</span></div>
+            </div>
+
+            <div id="message-popup">
+                <h3 style="color: var(--secondary-color); margin-top:0;">Python 紧急维修!</h3>
+                <div class="code-block" id="question-text"></div>
+                <p id="question-desc">请选择正确的代码来修复引擎：</p>
+            </div>
+        </div>
+
+        <!-- 开始界面 -->
+        <div id="start-screen" class="screen-overlay">
+            <h1>🚀 Python 火箭救援</h1>
+            <p>你的 Python 火箭飞船出了故障！</p>
+            <p>你需要回答 Python 编程问题来给火箭充能，并避开太空垃圾。</p>
+            <p><strong>操作指南：</strong> 使用键盘 ← → 键或点击屏幕左右侧来移动火箭。</p>
+            <p><strong>获胜条件：</strong> 达到 100 分！</p>
+            <button onclick="startGame()" class="big-btn">开始任务</button>
+        </div>
+
+        <!-- 失败界面 -->
+        <div id="game-over-screen" class="screen-overlay hidden">
+            <h1 style="color: var(--danger-color)">任务失败</h1>
+            <p>飞船受损严重...</p>
+            <p>最终得分: <span id="final-score">0</span></p>
+            <button onclick="restartGame()" class="big-btn">再次尝试</button>
+        </div>
+
+        <!-- 胜利界面（新增） -->
+        <div id="win-screen" class="screen-overlay hidden">
+            <h1 style="color: var(--accent-color)">🎉 挑战成功！</h1>
+            <p>太棒了！你成功获得 100 分，拯救了 Python 火箭！</p>
+            <p>最终得分: <span id="win-score">0</span></p>
+            <button onclick="restartGame()" class="big-btn">再来一次</button>
+        </div>
+
+        <button id="pause-btn" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:24px; cursor:pointer; pointer-events:auto;">⏸️</button>
+    </div>
+
+    <div id="control-panel">
+        <div id="options-grid">
+            <button class="option-btn" style="visibility:hidden">占位</button>
+            <button class="option-btn" style="visibility:hidden">占位</button>
+            <button class="option-btn" style="visibility:hidden">占位</button>
+            <button class="option-btn" style="visibility:hidden">占位</button>
+        </div>
+        <p style="font-size:0.8rem; color:#888; text-align:center; margin:0;">提示：回答问题获得能量，能量耗尽或撞毁则失败。达到 100 分即挑战成功！</p>
+    </div>
+
+    <div id="achievement-toast">🏆 <span id="achievement-text">获得成就！</span></div>
+
+    <script>
+        // --- Game Configuration ---
+        const CONFIG = {
+            shipSpeed: 7,
+            obstacleBaseSpeed: 3,
+            energyDrain: 0.05,
+            energyMax: 100,
+            questionFrequency: 2000, // ms，题目触发间隔（更频繁）
+            winScore: 100,           // 获胜分数
+            colors: {
+                ship: '#3498db',
+                flame: '#e67e22',
+                obstacle: '#e74c3c',
+                energy: '#2ecc71'
+            }
+        };
+
+        // --- 题目数据（全部覆盖新知识点） ---
+        const QUESTIONS = [
+            // ---- if 基础 ----
+            {
+                code: "x = 10\nif x ___ 5:\n    print('Big')",
+                desc: "填空：当 x 大于 5 时打印 'Big'。",
+                options: [">", "<", "==", "!="],
+                correct: 0,
+                topic: "if 条件判断"
+            },
+            {
+                code: "a = 3\nb = 8\nif a > b:\n    print('A')\n___:\n    print('B')",
+                desc: "填空：当条件不成立时执行打印 'B'。",
+                options: ["elif", "else", "if", "for"],
+                correct: 1,
+                topic: "if-else"
+            },
+            {
+                code: "score = 75\nif score >= 90:\n    print('A')\nelif score >= 60:\n    print('___')",
+                desc: "填空：分数在 60~89 之间应打印什么？",
+                options: ["A", "B", "C", "D"],
+                correct: 1,
+                topic: "if-elif-else"
+            },
+
+            // ---- for 循环 ----
+            {
+                code: "for i in range(4):\n    print(i)",
+                desc: "输出：这段代码会打印什么？",
+                options: ["1 2 3 4", "0 1 2 3", "0 1 2 3 4", "1 2 3"],
+                correct: 1,
+                topic: "for 循环"
+            },
+            {
+                code: "total = 0\nfor i in [1, 2, 3]:\n    total += i\nprint(total)",
+                desc: "输出：total 最终是多少？",
+                options: ["3", "5", "6", "123"],
+                correct: 2,
+                topic: "for 累加"
+            },
+
+            // ---- split() ----
+            {
+                code: "s = 'a,b,c'\nparts = s.split(',')\nprint(parts)",
+                desc: "输出：parts 是什么？",
+                options: ["'a,b,c'", "['a', 'b', 'c']", "('a', 'b', 'c')", "abc"],
+                correct: 1,
+                topic: "split()"
+            },
+            {
+                code: "s = 'hello world'\nwords = s.split()\nprint(len(words))",
+                desc: "输出：len(words) 是多少？",
+                options: ["1", "2", "10", "11"],
+                correct: 1,
+                topic: "split()"
+            },
+
+            // ---- index() ----
+            {
+                code: "s = 'python'\nprint(s.index('t'))",
+                desc: "输出：s.index('t') 返回什么？",
+                options: ["0", "1", "2", "3"],
+                correct: 2,
+                topic: "index()"
+            },
+
+            // ---- min() ----
+            {
+                code: "nums = [3, 1, 4, 1, 5]\nprint(min(nums))",
+                desc: "输出：min(nums) 返回什么？",
+                options: ["1", "3", "4", "5"],
+                correct: 0,
+                topic: "min()"
+            },
+
+            // ---- max() ----
+            {
+                code: "nums = [3, 1, 4, 1, 5]\nprint(max(nums))",
+                desc: "输出：max(nums) 返回什么？",
+                options: ["1", "3", "4", "5"],
+                correct: 3,
+                topic: "max()"
+            },
+
+            // ---- sum() ----
+            {
+                code: "nums = [1, 2, 3, 4]\nprint(sum(nums))",
+                desc: "输出：sum(nums) 返回什么？",
+                options: ["4", "10", "24", "1234"],
+                correct: 1,
+                topic: "sum()"
+            },
+
+            // ---- sorted() ----
+            {
+                code: "nums = [3, 1, 4, 1, 5]\nprint(sorted(nums))",
+                desc: "输出：sorted(nums) 返回什么？",
+                options: ["[5, 4, 3, 1, 1]", "[1, 1, 3, 4, 5]", "[3, 1, 4, 1, 5]", "[1, 3, 4, 5]"],
+                correct: 1,
+                topic: "sorted()"
+            },
+            {
+                code: "words = ['banana', 'apple', 'cherry']\nprint(sorted(words))",
+                desc: "输出：sorted(words) 返回什么？",
+                options: [
+                    "['banana', 'apple', 'cherry']",
+                    "['apple', 'banana', 'cherry']",
+                    "['cherry', 'banana', 'apple']",
+                    "['apple', 'cherry', 'banana']"
+                ],
+                correct: 1,
+                topic: "sorted()"
+            }
+        ];
+
+        // --- Global Variables ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let gameLoopId;
+        let lastTime = 0;
+
+        let gameState = {
+            active: false,
+            score: 0,
+            energy: 100,
+            level: 1,
+            paused: false
+        };
+
+        let ship = {
+            x: 0,
+            y: 0,
+            width: 40,
+            height: 60,
+            movingLeft: false,
+            movingRight: false,
+            particles: []
+        };
+
+        let obstacles = [];
+        let currentQuestion = null;
+        let lastQuestionTime = 0;
+
+        // --- Setup & Resize ---
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight - 150;
+            if (!gameState.active) {
+                ship.x = canvas.width / 2;
+                ship.y = canvas.height - 100;
+            }
+        }
+        window.addEventListener('resize', resize);
+
+        // --- Input Handling ---
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') ship.movingLeft = true;
+            if (e.key === 'ArrowRight') ship.movingRight = true;
+            if (e.key === 'Escape') togglePause();
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowLeft') ship.movingLeft = false;
+            if (e.key === 'ArrowRight') ship.movingRight = false;
+        });
+
+        canvas.addEventListener('mousedown', (e) => handleInputStart(e.clientX));
+        canvas.addEventListener('touchstart', (e) => handleInputStart(e.touches[0].clientX));
+
+        window.addEventListener('mouseup', () => handleInputEnd());
+        window.addEventListener('touchend', () => handleInputEnd());
+
+        function handleInputStart(clientX) {
+            if (!gameState.active || gameState.paused) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = clientX - rect.left;
+            if (x < rect.width / 2) ship.movingLeft = true;
+            else ship.movingRight = true;
+        }
+
+        function handleInputEnd() {
+            ship.movingLeft = false;
+            ship.movingRight = false;
+        }
+
+        // --- Game Logic ---
+
+        function startGame() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('game-over-screen').classList.add('hidden');
+            document.getElementById('win-screen').classList.add('hidden');
+
+            resize();
+
+            gameState.active = true;
+            gameState.score = 0;
+            gameState.energy = 100;
+            gameState.paused = false;
+            obstacles = [];
+            ship.x = canvas.width / 2;
+            ship.y = canvas.height - 80;
+
+            updateHUD();
+
+            lastTime = performance.now();
+            gameLoopId = requestAnimationFrame(gameLoop);
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        function togglePause() {
+            if (!gameState.active) return;
+            gameState.paused = !gameState.paused;
+            document.getElementById('pause-btn').textContent = gameState.paused ? "▶️" : "⏸️";
+        }
+
+        document.getElementById('pause-btn').addEventListener('click', togglePause);
+
+        function gameLoop(timestamp) {
+            if (!gameState.active) return;
+
+            const deltaTime = timestamp - lastTime;
+            lastTime = timestamp;
+
+            if (!gameState.paused) {
+                update(deltaTime);
+                draw();
+
+                // 当能量偏低时触发题目（能量阈值调高，频率加快）
+                if (gameState.energy < 80 && !currentQuestion) {
+                    if (timestamp - lastQuestionTime > CONFIG.questionFrequency) {
+                        triggerQuestion();
+                        lastQuestionTime = timestamp;
+                    }
+                }
+            }
+
+            gameLoopId = requestAnimationFrame(gameLoop);
+        }
+
+        function update(deltaTime) {
+            // 1. 移动飞船
+            if (ship.movingLeft) ship.x -= CONFIG.shipSpeed;
+            if (ship.movingRight) ship.x += CONFIG.shipSpeed;
+
+            if (ship.x < 0) ship.x = 0;
+            if (ship.x > canvas.width - ship.width) ship.x = canvas.width - ship.width;
+
+            // 2. 能量消耗
+            gameState.energy -= CONFIG.energyDrain;
+            if (gameState.energy <= 0) {
+                gameOver();
+                return;
+            }
+
+            // 3. 生成障碍物
+            if (Math.random() < 0.02 + (gameState.score * 0.0001)) {
+                spawnObstacle();
+            }
+
+            // 4. 更新障碍物与碰撞
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                let obs = obstacles[i];
+                obs.y += obs.speed;
+                obs.rotation += 0.05;
+
+                if (
+                    ship.x < obs.x + obs.width &&
+                    ship.x + ship.width > obs.x &&
+                    ship.y < obs.y + obs.height &&
+                    ship.y + ship.height > obs.y
+                ) {
+                    gameState.energy -= 20;
+                    obstacles.splice(i, 1);
+                    document.getElementById('game-container').style.backgroundColor = '#440000';
+                    setTimeout(() => {
+                        document.getElementById('game-container').style.backgroundColor = '';
+                    }, 100);
+
+                    if (gameState.energy <= 0) {
+                        gameOver();
+                        return;
+                    }
+                    continue;
+                }
+
+                if (obs.y > canvas.height) {
+                    obstacles.splice(i, 1);
+                    gameState.score += 1;
+                }
+            }
+
+            // 5. ★ 胜利条件：分数达到 100
+            if (gameState.score >= CONFIG.winScore) {
+                winGame();
+                return;
+            }
+
+            updateHUD();
+        }
+
+        function spawnObstacle() {
+            const size = 30 + Math.random() * 30;
+            obstacles.push({
+                x: Math.random() * (canvas.width - size),
+                y: -50,
+                width: size,
+                height: size,
+                speed: CONFIG.obstacleBaseSpeed + Math.random() * 2,
+                rotation: 0,
+                type: Math.random() > 0.5 ? 'asteroid' : 'debris'
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'white';
+            for(let i=0; i<20; i++) {
+                ctx.fillRect((Math.sin(Date.now()/1000 + i)*canvas.width + canvas.width)%canvas.width, (Date.now()/2 + i*50)%canvas.height, 2, 2);
+            }
+
+            // 飞船
+            ctx.save();
+            ctx.translate(ship.x + ship.width/2, ship.y + ship.height/2);
+
+            if (Math.random() > 0.5) {
+                ctx.fillStyle = CONFIG.colors.flame;
+                ctx.beginPath();
+                ctx.moveTo(-10, 20);
+                ctx.lineTo(0, 40 + Math.random() * 10);
+                ctx.lineTo(10, 20);
+                ctx.fill();
+            }
+
+            ctx.fillStyle = CONFIG.colors.ship;
+            ctx.beginPath();
+            ctx.moveTo(0, -30);
+            ctx.lineTo(20, 20);
+            ctx.lineTo(0, 10);
+            ctx.lineTo(-20, 20);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = '#aed6f1';
+            ctx.beginPath();
+            ctx.arc(0, -5, 5, 0, Math.PI*2);
+            ctx.fill();
+
+            ctx.restore();
+
+            // 障碍物
+            obstacles.forEach(obs => {
+                ctx.save();
+                ctx.translate(obs.x + obs.width/2, obs.y + obs.height/2);
+                ctx.rotate(obs.rotation);
+                ctx.fillStyle = CONFIG.colors.obstacle;
+
+                if (obs.type === 'asteroid') {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, obs.width/2, 0, Math.PI*2);
+                    ctx.fill();
+                } else {
+                    ctx.fillRect(-obs.width/2, -obs.height/2, obs.width, obs.height);
+                }
+                ctx.restore();
+            });
+        }
+
+        // --- Question System ---
+
+        function triggerQuestion() {
+            gameState.paused = true;
+
+            const qIndex = Math.floor(Math.random() * QUESTIONS.length);
+            currentQuestion = QUESTIONS[qIndex];
+
+            const popup = document.getElementById('message-popup');
+            const codeBlock = document.getElementById('question-text');
+            const grid = document.getElementById('options-grid');
+
+            codeBlock.textContent = currentQuestion.code;
+            codeBlock.dataset.topic = currentQuestion.topic;
+            popup.style.display = 'block';
+
+            grid.innerHTML = '';
+            currentQuestion.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => handleAnswer(index, btn);
+                grid.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(selectedIndex, btnElement) {
+            const correctIndex = currentQuestion.correct;
+
+            if (selectedIndex === correctIndex) {
+                btnElement.classList.add('correct');
+                gameState.energy = Math.min(gameState.energy + 30, 100);
+                gameState.score += 10; // 答对 +10 分
+
+                setTimeout(() => {
+                    endQuestion(true);
+                }, 800);
+            } else {
+                btnElement.classList.add('wrong');
+                gameState.energy -= 10;
+                const buttons = document.querySelectorAll('.option-btn');
+                buttons[correctIndex].classList.add('correct');
+
+                setTimeout(() => {
+                    endQuestion(false);
+                }, 1200);
+            }
+        }
+
+        function endQuestion(success) {
+            document.getElementById('message-popup').style.display = 'none';
+            currentQuestion = null;
+            gameState.paused = false;
+
+            if (success && gameState.score % 50 === 0 && gameState.score > 0) {
+                showAchievement("Python 大师！");
+            }
+        }
+
+        function updateHUD() {
+            document.getElementById('score-display').textContent = Math.floor(gameState.score);
+            document.getElementById('level-display').textContent = Math.floor(gameState.score / 50) + 1;
+
+            const scoreEl = document.querySelector('#hud div:first-child');
+            if (gameState.energy < 30) scoreEl.style.color = 'var(--danger-color)';
+            else scoreEl.style.color = '';
+        }
+
+        function showAchievement(text) {
+            const toast = document.getElementById('achievement-toast');
+            document.getElementById('achievement-text').textContent = text;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // ★ 失败：能量耗尽
+        function gameOver() {
+            gameState.active = false;
+            cancelAnimationFrame(gameLoopId);
+            document.getElementById('final-score').textContent = Math.floor(gameState.score);
+            document.getElementById('game-over-screen').classList.remove('hidden');
+        }
+
+        // ★ 胜利：达到 100 分（新增）
+        function winGame() {
+            gameState.active = false;
+            cancelAnimationFrame(gameLoopId);
+            document.getElementById('win-score').textContent = Math.floor(gameState.score);
+            document.getElementById('win-screen').classList.remove('hidden');
+        }
+
+        // --- Platform Integration ---
+        window.setGameParam = function(key, value) {
+            if(key === 'difficulty') {
+                CONFIG.obstacleBaseSpeed = parseFloat(value);
+            }
+        };
+
+        window.addEventListener('message', function(event) {
+            const { type, target, state } = event.data;
+
+            switch (type) {
+                case 'SET_WIDGET_STATE':
+                    if (state) {
+                        Object.entries(state).forEach(([key, value]) => {
+                            window.setGameParam(key, value);
+                        });
+                    }
+                    break;
+
+                case 'HIGHLIGHT_ELEMENT':
+                    if(target.includes('code')) {
+                        document.querySelector('.code-block').style.border = '3px solid var(--secondary-color)';
+                    }
+                    break;
+            }
+        });
+
+        resize();
+    </script>
+</body>
+</html>
