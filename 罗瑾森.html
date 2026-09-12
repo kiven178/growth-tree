@@ -11,7 +11,8 @@
     body { background-image: var(--custom-bg); background-size: cover; background-attachment: fixed; background-position: center; }
     .forest { max-width: 550px; margin: 0 auto; background: rgba(255,255,240,0.85); backdrop-filter: blur(4px); border-radius: 48px; padding: 20px 16px 30px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
     .forest-header { text-align: center; margin-bottom: 20px; position: relative; }
-    .avatar { width: 64px; height: 64px; border-radius: 50%; background: #fff; border: 2px solid #ffb347; margin: 0 auto 8px; overflow: hidden; }
+    .avatar { width: 64px; height: 64px; border-radius: 50%; background: #fff; border: 2px solid #ffb347; margin: 0 auto 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
+    .avatar:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(255,179,71,0.5); }
     .avatar img { width: 100%; height: 100%; object-fit: cover; }
     h1 { font-size: 24px; color: #2e7d32; text-shadow: 0 1px 1px white; }
     .title-prefix { font-size: 20px; background: linear-gradient(135deg, #ffb347, #ff8c00); display: inline-block; padding: 2px 12px; border-radius: 40px; margin-right: 8px; color: white; }
@@ -109,12 +110,17 @@
     <div class="pie-container">
       <canvas id="pieChart" width="80" height="80"></canvas>
       <div class="pie-label">总体进度</div>
-      <div class="total-title">🌱 小萌新</div>
+      <div class="total-title">📖 学习幼苗</div>
     </div>
     <div class="forest">
       <div class="forest-header">
-        <div class="avatar"><img src="https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/head/小核桃.png" alt="头像"></div>
-        <h1><span class="title-prefix">🌱 小萌新</span> 罗瑾森的星际探险家</h1>
+        <div class="avatar" onclick="openAvatarUpload()" title="点击更换头像">
+          <img id="studentAvatar"
+               src="https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/avatars/罗瑾森.png"
+               onerror="this.onerror=null; this.src='https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/head/小核桃.png';"
+               alt="头像">
+        </div>
+        <h1><span class="title-prefix">📖 学习幼苗</span> 罗瑾森的星际探险家</h1>
         <div class="theme-story">📖 🚀 在浩瀚的宇宙中，每学会一个技能就能发现一颗新的天体！</div>
         <div class="guide-text">✨ 点击天体图标，探索宇宙奥秘！ ✨</div>
       </div>
@@ -131,12 +137,17 @@
 
   <script>
     const pagePwd = "2175";
-    const version = "20260906184548";
+    const version = "20260912083857";
     const eggIcon = "🌍";
     const dinoIcon = "🛸";
-    const globalLatestId = 2;
-    // 如果 lesson_history 未定义，设为空对象，防止报错
-    const lessonHistory = {"1": {"homework_link": "https://doc.weixin.qq.com/forms/ACQA7Qc2AAYARwAGQYXAHkCNTIcrx7l2f?page=76", "knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "wrong_videos": "5"}, "2": {"homework_link": "https://v.wjx.cn/vm/QUlPA0t.aspx", "knowledge": "\u2460max()\u547d\u4ee4\u53ef\u4ee5\u6c42\u51fa\u6700\u5927\u503c\n\u4f8b\uff1al = [1,7,2,5]\na = max(l)\nprint(a)\n#\u8f93\u51fa\u6700\u5927\u7684\u6570\u5b57\uff1a7 \n\u2461min()\u547d\u4ee4\u4e0emax()\u76f8\u53cd\uff0c\u7528\u6765\u6c42\u51fa\u6700\u5c0f\u503c\n\u2462index()\u547d\u4ee4\u8fd4\u56de\u76ee\u6807\u3010\u7b2c\u4e00\u6b21\u3011\u51fa\u73b0\u7684\u4f4d\u7f6e\u3010\u7d22\u5f15\u3011\uff0c\u5982\uff1a\nlst = [\"\u82f9\u679c\",\"\u9999\u8549\",\"\u6a59\u5b50\"] \nprint(lst.index(\"\u9999\u8549\")) \n#\u8f93\u51fa\uff1a1\uff0c\u9999\u8549\u7b2c\u4e00\u6b21\u51fa\u73b0\u7684\u4f4d\u7f6e\u662f\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\uff0c\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\u7684\u7d22\u5f15\u4e3a2-1=1", "wrong_videos": "34"}};
+    const globalLatestId = 3;
+    const lessonHistory = {"1": {"homework_link": "https://doc.weixin.qq.com/forms/ACQA7Qc2AAYARwAGQYXAHkCNTIcrx7l2f?page=76", "knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "wrong_videos": "5"}, "2": {"homework_link": "https://v.wjx.cn/vm/QUlPA0t.aspx", "knowledge": "\u2460max()\u547d\u4ee4\u53ef\u4ee5\u6c42\u51fa\u6700\u5927\u503c\n\u4f8b\uff1al = [1,7,2,5]\na = max(l)\nprint(a)\n#\u8f93\u51fa\u6700\u5927\u7684\u6570\u5b57\uff1a7 \n\u2461min()\u547d\u4ee4\u4e0emax()\u76f8\u53cd\uff0c\u7528\u6765\u6c42\u51fa\u6700\u5c0f\u503c\n\u2462index()\u547d\u4ee4\u8fd4\u56de\u76ee\u6807\u3010\u7b2c\u4e00\u6b21\u3011\u51fa\u73b0\u7684\u4f4d\u7f6e\u3010\u7d22\u5f15\u3011\uff0c\u5982\uff1a\nlst = [\"\u82f9\u679c\",\"\u9999\u8549\",\"\u6a59\u5b50\"] \nprint(lst.index(\"\u9999\u8549\")) \n#\u8f93\u51fa\uff1a1\uff0c\u9999\u8549\u7b2c\u4e00\u6b21\u51fa\u73b0\u7684\u4f4d\u7f6e\u662f\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\uff0c\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\u7684\u7d22\u5f15\u4e3a2-1=1", "wrong_videos": "34"}, "3": {"homework_link": "https://kiven178.github.io/growth-tree/03_rocket_rescue.html", "knowledge": "\u2460sum() \u547d\u4ee4\u53ef\u4ee5\u7528\u4e8e\u6c42\u548c\u4e00\u4e2a\u5217\u8868\u4e2d\u6240\u6709\u5143\u7d20\u7684\u603b\u548c\u3002\n\u4f8b\uff1a\nl = [1, 2, 3, 4]\na = sum(l)\nprint(a) #\u8f93\u51fa10\n\u2461sorted() \u547d\u4ee4\u53ef\u4ee5\u7528\u4e8e\u5bf9\u5217\u8868\u8fdb\u884c\u6392\u5e8f\uff0c\u8fd4\u56de\u4e00\u4e2a\u3010\u65b0\u7684\u5df2\u6392\u5e8f\u5217\u8868\u3011\u3002\n\u4f8b\uff1a\nl = [3, 1, 4, 2]\na = sorted(l)\nprint(a) #\u8f93\u51fa[1,2,3,4]", "wrong_videos": "013"}};
+
+    // ===== 头像上传用到的变量 =====
+    const studentName = "罗瑾森";
+    const cdnBaseUrl = "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com";
+    // ⚠️ 替换成你的阿里云函数计算 HTTP 触发器地址
+    const AVATAR_API = 'https://avatar-upload-riggffmyhf.cn-hangzhou.fcapp.run';
 
     // 统一使用 growth_login
     if (sessionStorage.getItem('forest_login') === 'true') {
@@ -155,7 +166,7 @@
       }
     }
 
-    const categoriesRaw = [{"fog_image": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/space/fog/\u5185\u5708\u5ca9\u77f3\u884c\u661f/1.png", "fog_image_base": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/space/fog/\u5185\u5708\u5ca9\u77f3\u884c\u661f", "habitat": "\u5185\u5708\u5ca9\u77f3\u884c\u661f", "latest_node": {"detail": {"knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "mistake": "\u7b2c5\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "split\u547d\u4ee4", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/1/5.mp4"]}, "dino_intro": "\u6c34\u661f\u662f\u79bb\u592a\u9633\u6700\u8fd1\u7684\u884c\u661f\uff0c\u8868\u9762\u5e03\u6ee1\u9668\u77f3\u5751\uff0c\u50cf\u4e00\u9897\u88ab\u8f70\u70b8\u8fc7\u7684\u6708\u7403\u3002\u6c34\u661f\u6ca1\u6709\u5927\u6c14\u5c42\uff0c\u663c\u591c\u6e29\u5dee\u6781\u5927\uff0c\u767d\u5929\u53ef\u8fbe430\u2103\uff0c\u591c\u665a\u964d\u5230-180\u2103\uff0c\u662f\u592a\u9633\u7cfb\u4e2d\u6700\u6781\u7aef\u7684\u73af\u5883\u4e4b\u4e00\u3002", "dino_name": "\u6c34\u661f", "id": 1, "status": "completed"}, "learned_count": 1, "learned_details": [{"detail": {"knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "mistake": "\u7b2c5\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "split\u547d\u4ee4", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/1/5.mp4"]}, "dino_intro": "\u6c34\u661f\u662f\u79bb\u592a\u9633\u6700\u8fd1\u7684\u884c\u661f\uff0c\u8868\u9762\u5e03\u6ee1\u9668\u77f3\u5751\uff0c\u50cf\u4e00\u9897\u88ab\u8f70\u70b8\u8fc7\u7684\u6708\u7403\u3002\u6c34\u661f\u6ca1\u6709\u5927\u6c14\u5c42\uff0c\u663c\u591c\u6e29\u5dee\u6781\u5927\uff0c\u767d\u5929\u53ef\u8fbe430\u2103\uff0c\u591c\u665a\u964d\u5230-180\u2103\uff0c\u662f\u592a\u9633\u7cfb\u4e2d\u6700\u6781\u7aef\u7684\u73af\u5883\u4e4b\u4e00\u3002", "dino_name": "\u6c34\u661f", "id": 1, "status": "completed"}], "name": "\u5185\u5708\u5ca9\u77f3\u884c\u661f", "next_id": 6, "style": {"name": "\u5185\u5708\u5ca9\u77f3\u884c\u661f"}, "title": "\ud83e\ude90 \u5ca9\u77f3\u65b0\u79c0", "total": 2}, {"fog_image": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/space/fog/\u5b87\u5b99\u5947\u89c2/1.png", "fog_image_base": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/space/fog/\u5b87\u5b99\u5947\u89c2", "habitat": "\u5b87\u5b99\u5947\u89c2", "latest_node": {"detail": {"knowledge": "\u2460max()\u547d\u4ee4\u53ef\u4ee5\u6c42\u51fa\u6700\u5927\u503c\n\u4f8b\uff1al = [1,7,2,5]\na = max(l)\nprint(a)\n#\u8f93\u51fa\u6700\u5927\u7684\u6570\u5b57\uff1a7 \n\u2461min()\u547d\u4ee4\u4e0emax()\u76f8\u53cd\uff0c\u7528\u6765\u6c42\u51fa\u6700\u5c0f\u503c\n\u2462index()\u547d\u4ee4\u8fd4\u56de\u76ee\u6807\u3010\u7b2c\u4e00\u6b21\u3011\u51fa\u73b0\u7684\u4f4d\u7f6e\u3010\u7d22\u5f15\u3011\uff0c\u5982\uff1a\nlst = [\"\u82f9\u679c\",\"\u9999\u8549\",\"\u6a59\u5b50\"] \nprint(lst.index(\"\u9999\u8549\")) \n#\u8f93\u51fa\uff1a1\uff0c\u9999\u8549\u7b2c\u4e00\u6b21\u51fa\u73b0\u7684\u4f4d\u7f6e\u662f\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\uff0c\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\u7684\u7d22\u5f15\u4e3a2-1=1", "mistake": "\u7b2c3,4\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "\u67e5\u627e\u7b97\u6cd5", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/2/3.mp4", "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/2/4.mp4"]}, "dino_intro": "\u9ed1\u6d1e\u5f15\u529b\u6781\u5f3a\uff0c\u8fde\u5149\u90fd\u65e0\u6cd5\u9003\u8131\uff0c\u662f\u5b87\u5b99\u4e2d\u6700\u795e\u79d8\u7684\u5929\u4f53\u4e4b\u4e00\u3002\u9ed1\u6d1e\u7531\u8d85\u5927\u8d28\u91cf\u6052\u661f\u7684\u5f15\u529b\u574d\u7f29\u5f62\u6210\uff0c\u5b83\u7684\u8fb9\u754c\u79f0\u4e3a\u0027\u4e8b\u4ef6\u89c6\u754c\u0027\uff0c\u4e00\u65e6\u8fdb\u5165\u5c31\u518d\u4e5f\u65e0\u6cd5\u9003\u9038\u3002", "dino_name": "\u9ed1\u6d1e", "id": 2, "status": "completed"}, "learned_count": 1, "learned_details": [{"detail": {"knowledge": "\u2460max()\u547d\u4ee4\u53ef\u4ee5\u6c42\u51fa\u6700\u5927\u503c\n\u4f8b\uff1al = [1,7,2,5]\na = max(l)\nprint(a)\n#\u8f93\u51fa\u6700\u5927\u7684\u6570\u5b57\uff1a7 \n\u2461min()\u547d\u4ee4\u4e0emax()\u76f8\u53cd\uff0c\u7528\u6765\u6c42\u51fa\u6700\u5c0f\u503c\n\u2462index()\u547d\u4ee4\u8fd4\u56de\u76ee\u6807\u3010\u7b2c\u4e00\u6b21\u3011\u51fa\u73b0\u7684\u4f4d\u7f6e\u3010\u7d22\u5f15\u3011\uff0c\u5982\uff1a\nlst = [\"\u82f9\u679c\",\"\u9999\u8549\",\"\u6a59\u5b50\"] \nprint(lst.index(\"\u9999\u8549\")) \n#\u8f93\u51fa\uff1a1\uff0c\u9999\u8549\u7b2c\u4e00\u6b21\u51fa\u73b0\u7684\u4f4d\u7f6e\u662f\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\uff0c\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\u7684\u7d22\u5f15\u4e3a2-1=1", "mistake": "\u7b2c3,4\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "\u67e5\u627e\u7b97\u6cd5", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/2/3.mp4", "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/2/4.mp4"]}, "dino_intro": "\u9ed1\u6d1e\u5f15\u529b\u6781\u5f3a\uff0c\u8fde\u5149\u90fd\u65e0\u6cd5\u9003\u8131\uff0c\u662f\u5b87\u5b99\u4e2d\u6700\u795e\u79d8\u7684\u5929\u4f53\u4e4b\u4e00\u3002\u9ed1\u6d1e\u7531\u8d85\u5927\u8d28\u91cf\u6052\u661f\u7684\u5f15\u529b\u574d\u7f29\u5f62\u6210\uff0c\u5b83\u7684\u8fb9\u754c\u79f0\u4e3a\u0027\u4e8b\u4ef6\u89c6\u754c\u0027\uff0c\u4e00\u65e6\u8fdb\u5165\u5c31\u518d\u4e5f\u65e0\u6cd5\u9003\u9038\u3002", "dino_name": "\u9ed1\u6d1e", "id": 2, "status": "completed"}], "name": "\u5b87\u5b99\u5947\u89c2", "next_id": 3, "style": {"name": "\u5b87\u5b99\u5947\u89c2"}, "title": "\ud83c\udf0c \u5947\u89c2\u65b0\u79c0", "total": 5}];
+    const categoriesRaw = [{"fog_image": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/space/fog/\u5b87\u5b99\u5947\u89c2/2.png", "fog_image_base": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/space/fog/\u5b87\u5b99\u5947\u89c2", "habitat": "\u5b87\u5b99\u5947\u89c2", "latest_node": {"detail": {"knowledge": "\u2460sum() \u547d\u4ee4\u53ef\u4ee5\u7528\u4e8e\u6c42\u548c\u4e00\u4e2a\u5217\u8868\u4e2d\u6240\u6709\u5143\u7d20\u7684\u603b\u548c\u3002\n\u4f8b\uff1a\nl = [1, 2, 3, 4]\na = sum(l)\nprint(a) #\u8f93\u51fa10\n\u2461sorted() \u547d\u4ee4\u53ef\u4ee5\u7528\u4e8e\u5bf9\u5217\u8868\u8fdb\u884c\u6392\u5e8f\uff0c\u8fd4\u56de\u4e00\u4e2a\u3010\u65b0\u7684\u5df2\u6392\u5e8f\u5217\u8868\u3011\u3002\n\u4f8b\uff1a\nl = [3, 1, 4, 2]\na = sorted(l)\nprint(a) #\u8f93\u51fa[1,2,3,4]", "mistake": "\u7b2c0,1,3\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "\u5217\u8868\u6392\u5e8f", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/3/0.mp4", "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/3/1.mp4", "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/3/3.mp4"]}, "dino_intro": "\u5f57\u661f\u62d6\u7740\u957f\u957f\u7684\u5c3e\u5df4\uff0c\u5728\u5929\u7a7a\u4e2d\u5212\u8fc7\uff0c\u7f8e\u4e3d\u800c\u795e\u79d8\uff0c\u50cf\u4e00\u9897\u51b0\u5236\u7684\u884c\u661f\u3002\u5f57\u661f\u7531\u6c34\u51b0\u3001\u5ca9\u77f3\u548c\u5c18\u57c3\u7ec4\u6210\uff0c\u5f53\u5b83\u9760\u8fd1\u592a\u9633\u65f6\uff0c\u51b0\u5347\u534e\u6210\u6c14\u4f53\uff0c\u5f62\u6210\u58ee\u89c2\u7684\u5f57\u5c3e\u3002", "dino_name": "\u5f57\u661f", "id": 3, "status": "completed"}, "learned_count": 2, "learned_details": [{"detail": {"knowledge": "\u2460max()\u547d\u4ee4\u53ef\u4ee5\u6c42\u51fa\u6700\u5927\u503c\n\u4f8b\uff1al = [1,7,2,5]\na = max(l)\nprint(a)\n#\u8f93\u51fa\u6700\u5927\u7684\u6570\u5b57\uff1a7 \n\u2461min()\u547d\u4ee4\u4e0emax()\u76f8\u53cd\uff0c\u7528\u6765\u6c42\u51fa\u6700\u5c0f\u503c\n\u2462index()\u547d\u4ee4\u8fd4\u56de\u76ee\u6807\u3010\u7b2c\u4e00\u6b21\u3011\u51fa\u73b0\u7684\u4f4d\u7f6e\u3010\u7d22\u5f15\u3011\uff0c\u5982\uff1a\nlst = [\"\u82f9\u679c\",\"\u9999\u8549\",\"\u6a59\u5b50\"] \nprint(lst.index(\"\u9999\u8549\")) \n#\u8f93\u51fa\uff1a1\uff0c\u9999\u8549\u7b2c\u4e00\u6b21\u51fa\u73b0\u7684\u4f4d\u7f6e\u662f\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\uff0c\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\u7684\u7d22\u5f15\u4e3a2-1=1", "mistake": "\u7b2c3,4\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "\u67e5\u627e\u7b97\u6cd5", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/2/3.mp4", "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/2/4.mp4"]}, "dino_intro": "\u9ed1\u6d1e\u5f15\u529b\u6781\u5f3a\uff0c\u8fde\u5149\u90fd\u65e0\u6cd5\u9003\u8131\uff0c\u662f\u5b87\u5b99\u4e2d\u6700\u795e\u79d8\u7684\u5929\u4f53\u4e4b\u4e00\u3002\u9ed1\u6d1e\u7531\u8d85\u5927\u8d28\u91cf\u6052\u661f\u7684\u5f15\u529b\u574d\u7f29\u5f62\u6210\uff0c\u5b83\u7684\u8fb9\u754c\u79f0\u4e3a\u0027\u4e8b\u4ef6\u89c6\u754c\u0027\uff0c\u4e00\u65e6\u8fdb\u5165\u5c31\u518d\u4e5f\u65e0\u6cd5\u9003\u9038\u3002", "dino_name": "\u9ed1\u6d1e", "id": 2, "status": "completed"}, {"detail": {"knowledge": "\u2460sum() \u547d\u4ee4\u53ef\u4ee5\u7528\u4e8e\u6c42\u548c\u4e00\u4e2a\u5217\u8868\u4e2d\u6240\u6709\u5143\u7d20\u7684\u603b\u548c\u3002\n\u4f8b\uff1a\nl = [1, 2, 3, 4]\na = sum(l)\nprint(a) #\u8f93\u51fa10\n\u2461sorted() \u547d\u4ee4\u53ef\u4ee5\u7528\u4e8e\u5bf9\u5217\u8868\u8fdb\u884c\u6392\u5e8f\uff0c\u8fd4\u56de\u4e00\u4e2a\u3010\u65b0\u7684\u5df2\u6392\u5e8f\u5217\u8868\u3011\u3002\n\u4f8b\uff1a\nl = [3, 1, 4, 2]\na = sorted(l)\nprint(a) #\u8f93\u51fa[1,2,3,4]", "mistake": "\u7b2c0,1,3\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "\u5217\u8868\u6392\u5e8f", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/3/0.mp4", "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/3/1.mp4", "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/3/3.mp4"]}, "dino_intro": "\u5f57\u661f\u62d6\u7740\u957f\u957f\u7684\u5c3e\u5df4\uff0c\u5728\u5929\u7a7a\u4e2d\u5212\u8fc7\uff0c\u7f8e\u4e3d\u800c\u795e\u79d8\uff0c\u50cf\u4e00\u9897\u51b0\u5236\u7684\u884c\u661f\u3002\u5f57\u661f\u7531\u6c34\u51b0\u3001\u5ca9\u77f3\u548c\u5c18\u57c3\u7ec4\u6210\uff0c\u5f53\u5b83\u9760\u8fd1\u592a\u9633\u65f6\uff0c\u51b0\u5347\u534e\u6210\u6c14\u4f53\uff0c\u5f62\u6210\u58ee\u89c2\u7684\u5f57\u5c3e\u3002", "dino_name": "\u5f57\u661f", "id": 3, "status": "completed"}], "name": "\u5b87\u5b99\u5947\u89c2", "next_id": 8, "style": {"name": "\u5b87\u5b99\u5947\u89c2"}, "title": "\u2728 \u5947\u89c2\u5b66\u5f92", "total": 5}, {"fog_image": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/space/fog/\u5185\u5708\u5ca9\u77f3\u884c\u661f/1.png", "fog_image_base": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/space/fog/\u5185\u5708\u5ca9\u77f3\u884c\u661f", "habitat": "\u5185\u5708\u5ca9\u77f3\u884c\u661f", "latest_node": {"detail": {"knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "mistake": "\u7b2c5\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "split\u547d\u4ee4", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/1/5.mp4"]}, "dino_intro": "\u6c34\u661f\u662f\u79bb\u592a\u9633\u6700\u8fd1\u7684\u884c\u661f\uff0c\u8868\u9762\u5e03\u6ee1\u9668\u77f3\u5751\uff0c\u50cf\u4e00\u9897\u88ab\u8f70\u70b8\u8fc7\u7684\u6708\u7403\u3002\u6c34\u661f\u6ca1\u6709\u5927\u6c14\u5c42\uff0c\u663c\u591c\u6e29\u5dee\u6781\u5927\uff0c\u767d\u5929\u53ef\u8fbe430\u2103\uff0c\u591c\u665a\u964d\u5230-180\u2103\uff0c\u662f\u592a\u9633\u7cfb\u4e2d\u6700\u6781\u7aef\u7684\u73af\u5883\u4e4b\u4e00\u3002", "dino_name": "\u6c34\u661f", "id": 1, "status": "completed"}, "learned_count": 1, "learned_details": [{"detail": {"knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "mistake": "\u7b2c5\u9898\u6709\u9519\uff0c\u8bf7\u67e5\u770b\u89c6\u9891\u89e3\u6790\u3002", "title": "split\u547d\u4ee4", "wrong_videos": ["https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/videos/1/5.mp4"]}, "dino_intro": "\u6c34\u661f\u662f\u79bb\u592a\u9633\u6700\u8fd1\u7684\u884c\u661f\uff0c\u8868\u9762\u5e03\u6ee1\u9668\u77f3\u5751\uff0c\u50cf\u4e00\u9897\u88ab\u8f70\u70b8\u8fc7\u7684\u6708\u7403\u3002\u6c34\u661f\u6ca1\u6709\u5927\u6c14\u5c42\uff0c\u663c\u591c\u6e29\u5dee\u6781\u5927\uff0c\u767d\u5929\u53ef\u8fbe430\u2103\uff0c\u591c\u665a\u964d\u5230-180\u2103\uff0c\u662f\u592a\u9633\u7cfb\u4e2d\u6700\u6781\u7aef\u7684\u73af\u5883\u4e4b\u4e00\u3002", "dino_name": "\u6c34\u661f", "id": 1, "status": "completed"}], "name": "\u5185\u5708\u5ca9\u77f3\u884c\u661f", "next_id": 6, "style": {"name": "\u5185\u5708\u5ca9\u77f3\u884c\u661f"}, "title": "\ud83e\ude90 \u5ca9\u77f3\u65b0\u79c0", "total": 2}, {"fog_image": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/space/fog/\u5916\u5708\u6c14\u6001\u884c\u661f/0.png", "fog_image_base": "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/trees/space/fog/\u5916\u5708\u6c14\u6001\u884c\u661f", "habitat": "\u5916\u5708\u6c14\u6001\u884c\u661f", "latest_node": null, "learned_count": 0, "learned_details": [], "name": "\u5916\u5708\u6c14\u6001\u884c\u661f", "next_id": 4, "style": {"name": "\u5916\u5708\u6c14\u6001\u884c\u661f"}, "title": "\ud83e\udd5a \u86cb\u58f3\u65b0\u661f", "total": 4}];
     let categories = [];
     let musicPlaying = false;
     const bgMusic = document.getElementById('bgMusic');
@@ -191,6 +202,100 @@
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(Math.round(percent*100)+"%", center, center);
+    }
+
+    // ========== 头像上传 ==========
+    let selectedAvatarBase64 = null;
+
+    function openAvatarUpload() {
+      selectedAvatarBase64 = null;
+      const html = `
+        <div style="text-align:center;">
+          <h2 style="color:#2e7d32;">📷 更换头像</h2>
+          <p style="color:#888; font-size:14px; margin-top:8px;">选一张你喜欢的图片（建议正方形，小于2MB）</p>
+          <div style="margin: 20px 0;">
+            <img id="avatarPreview"
+                 src="${cdnBaseUrl}/images/avatars/${studentName}.png?v=${Date.now()}"
+                 onerror="this.onerror=null; this.src='${cdnBaseUrl}/images/head/小核桃.png';"
+                 style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid #ffb347;">
+          </div>
+          <input type="file" id="avatarFile" accept="image/*" style="display:none;" onchange="previewAvatar(event)">
+          <button onclick="document.getElementById('avatarFile').click()"
+                  style="padding:10px 24px; background:#43a047; color:white; border:none; border-radius:30px; cursor:pointer; margin:5px; font-size:15px;">
+            📁 选择图片
+          </button>
+          <button onclick="uploadAvatar()" id="uploadBtn"
+                  style="padding:10px 24px; background:#1e88e5; color:white; border:none; border-radius:30px; cursor:pointer; margin:5px; font-size:15px; display:none;">
+            🚀 上传头像
+          </button>
+          <div id="avatarResult" style="margin-top:12px; font-size:14px;"></div>
+        </div>
+      `;
+      document.getElementById('modalContent').innerHTML = html;
+      document.getElementById('fruitModal').style.display = 'flex';
+    }
+
+    function previewAvatar(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        document.getElementById('avatarResult').innerHTML = '<span style="color:red;">❌ 图片太大，请选择小于2MB的图片</span>';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxSize = 300;
+          let width = img.width, height = img.height;
+          if (width > height) {
+            if (width > maxSize) { height = height * maxSize / width; width = maxSize; }
+          } else {
+            if (height > maxSize) { width = width * maxSize / height; height = maxSize; }
+          }
+          canvas.width = width; canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          selectedAvatarBase64 = canvas.toDataURL('image/png');
+          document.getElementById('avatarPreview').src = selectedAvatarBase64;
+          document.getElementById('uploadBtn').style.display = 'inline-block';
+          document.getElementById('avatarResult').innerHTML = '<span style="color:#888;">图片已选择，点击"上传头像"即可</span>';
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function uploadAvatar() {
+      if (!selectedAvatarBase64) {
+        document.getElementById('avatarResult').innerHTML = '<span style="color:red;">请先选择图片</span>';
+        return;
+      }
+      const resultDiv = document.getElementById('avatarResult');
+      const uploadBtn = document.getElementById('uploadBtn');
+      resultDiv.innerHTML = '<span style="color:#1e88e5;">⏳ 正在上传...</span>';
+      uploadBtn.disabled = true;
+
+      fetch(AVATAR_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ student_name: studentName, image_base64: selectedAvatarBase64 })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          resultDiv.innerHTML = '<span style="color:#43a047;">✅ 上传成功！头像马上更新~</span>';
+          document.getElementById('studentAvatar').src = `${cdnBaseUrl}/images/avatars/${studentName}.png?t=${Date.now()}`;
+          setTimeout(() => closeModal(), 1800);
+        } else {
+          resultDiv.innerHTML = `<span style="color:red;">❌ ${data.message}</span>`;
+          uploadBtn.disabled = false;
+        }
+      })
+      .catch(error => {
+        resultDiv.innerHTML = `<span style="color:red;">❌ 网络错误：${error.message}</span>`;
+        uploadBtn.disabled = false;
+      });
     }
 
     // ========== 显示大图 ==========
@@ -356,7 +461,6 @@
 
         const card = document.createElement('div');
         card.className = 'tree-card';
-        // 为图片添加 title 和 onclick，实现气泡提示和点击查看大图
         const fogImageSrc = cat.fog_image;
         const categoryName = cat.name;
         card.innerHTML = `
