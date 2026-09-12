@@ -11,7 +11,8 @@
     body { background-image: var(--custom-bg); background-size: cover; background-attachment: fixed; background-position: center; }
     .forest { max-width: 550px; margin: 0 auto; background: rgba(255,255,240,0.85); backdrop-filter: blur(4px); border-radius: 48px; padding: 20px 16px 30px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
     .forest-header { text-align: center; margin-bottom: 20px; position: relative; }
-    .avatar { width: 64px; height: 64px; border-radius: 50%; background: #fff; border: 2px solid #ffb347; margin: 0 auto 8px; overflow: hidden; }
+    .avatar { width: 64px; height: 64px; border-radius: 50%; background: #fff; border: 2px solid #ffb347; margin: 0 auto 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
+    .avatar:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(255,179,71,0.5); }
     .avatar img { width: 100%; height: 100%; object-fit: cover; }
     h1 { font-size: 24px; color: #2e7d32; text-shadow: 0 1px 1px white; }
     .title-prefix { font-size: 20px; background: linear-gradient(135deg, #ffb347, #ff8c00); display: inline-block; padding: 2px 12px; border-radius: 40px; margin-right: 8px; color: white; }
@@ -113,7 +114,12 @@
     </div>
     <div class="forest">
       <div class="forest-header">
-        <div class="avatar"><img src="https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/head/小核桃.png" alt="头像"></div>
+        <div class="avatar" onclick="openAvatarUpload()" title="点击更换头像">
+          <img id="studentAvatar"
+               src="https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/avatars/叶靖成、叶靖宇.png"
+               onerror="this.onerror=null; this.src='https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/images/head/小核桃.png';"
+               alt="头像">
+        </div>
         <h1><span class="title-prefix">🌱 小萌新</span> 叶靖成、叶靖宇的恐龙乐园</h1>
         <div class="theme-story">📖 🦕 在恐龙岛上，每学会一个技能就能唤醒一只小恐龙！</div>
         <div class="guide-text">✨ 点击恐龙图标，认识新恐龙！ ✨</div>
@@ -131,12 +137,17 @@
 
   <script>
     const pagePwd = "3605";
-    const version = "20260906184548";
+    const version = "20260912083857";
     const eggIcon = "🥚";
     const dinoIcon = "🦕";
     const globalLatestId = 2;
-    // 如果 lesson_history 未定义，设为空对象，防止报错
     const lessonHistory = {"1": {"homework_link": "https://doc.weixin.qq.com/forms/ACQA7Qc2AAYARwAGQYXAHkCNTIcrx7l2f?page=192", "knowledge": "split(\u5206\u9694\u7b26)`\u628a\u5b57\u7b26\u4e32\u5207\u5f00\uff0c\u5f97\u5230\u5217\u8868\uff0c\u4e0d\u4f20\u53c2\u5c31\u6309\u7a7a\u767d\u5207\ns = \"hello python\"\nprint(s.split())\n# \u8f93\u51fa\uff1a[\u0027hello\u0027, \u0027python\u0027]\ns = \"a,b,c,d\"\nprint(s.split(\u0027,\u0027))\n# \u8f93\u51fa\uff1a[\u0027a\u0027, \u0027b\u0027, \u0027c\u0027, \u0027d\u0027]", "wrong_videos": "35"}, "2": {"homework_link": "https://v.wjx.cn/vm/QUlPA0t.aspx", "knowledge": "\u2460max()\u547d\u4ee4\u53ef\u4ee5\u6c42\u51fa\u6700\u5927\u503c\n\u4f8b\uff1al = [1,7,2,5]\na = max(l)\nprint(a)\n#\u8f93\u51fa\u6700\u5927\u7684\u6570\u5b57\uff1a7 \n\u2461min()\u547d\u4ee4\u4e0emax()\u76f8\u53cd\uff0c\u7528\u6765\u6c42\u51fa\u6700\u5c0f\u503c\n\u2462index()\u547d\u4ee4\u8fd4\u56de\u76ee\u6807\u3010\u7b2c\u4e00\u6b21\u3011\u51fa\u73b0\u7684\u4f4d\u7f6e\u3010\u7d22\u5f15\u3011\uff0c\u5982\uff1a\nlst = [\"\u82f9\u679c\",\"\u9999\u8549\",\"\u6a59\u5b50\"] \nprint(lst.index(\"\u9999\u8549\")) \n#\u8f93\u51fa\uff1a1\uff0c\u9999\u8549\u7b2c\u4e00\u6b21\u51fa\u73b0\u7684\u4f4d\u7f6e\u662f\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\uff0c\u7b2c\u4e8c\u4e2a\u4f4d\u7f6e\u7684\u7d22\u5f15\u4e3a2-1=1", "wrong_videos": "012"}};
+
+    // ===== 头像上传用到的变量 =====
+    const studentName = "叶靖成、叶靖宇";
+    const cdnBaseUrl = "https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com";
+    // ⚠️ 替换成你的阿里云函数计算 HTTP 触发器地址
+    const AVATAR_API = 'https://avatar-upload-riggffmyhf.cn-hangzhou.fcapp.run';
 
     // 统一使用 growth_login
     if (sessionStorage.getItem('forest_login') === 'true') {
@@ -191,6 +202,100 @@
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(Math.round(percent*100)+"%", center, center);
+    }
+
+    // ========== 头像上传 ==========
+    let selectedAvatarBase64 = null;
+
+    function openAvatarUpload() {
+      selectedAvatarBase64 = null;
+      const html = `
+        <div style="text-align:center;">
+          <h2 style="color:#2e7d32;">📷 更换头像</h2>
+          <p style="color:#888; font-size:14px; margin-top:8px;">选一张你喜欢的图片（建议正方形，小于2MB）</p>
+          <div style="margin: 20px 0;">
+            <img id="avatarPreview"
+                 src="${cdnBaseUrl}/images/avatars/${studentName}.png?v=${Date.now()}"
+                 onerror="this.onerror=null; this.src='${cdnBaseUrl}/images/head/小核桃.png';"
+                 style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid #ffb347;">
+          </div>
+          <input type="file" id="avatarFile" accept="image/*" style="display:none;" onchange="previewAvatar(event)">
+          <button onclick="document.getElementById('avatarFile').click()"
+                  style="padding:10px 24px; background:#43a047; color:white; border:none; border-radius:30px; cursor:pointer; margin:5px; font-size:15px;">
+            📁 选择图片
+          </button>
+          <button onclick="uploadAvatar()" id="uploadBtn"
+                  style="padding:10px 24px; background:#1e88e5; color:white; border:none; border-radius:30px; cursor:pointer; margin:5px; font-size:15px; display:none;">
+            🚀 上传头像
+          </button>
+          <div id="avatarResult" style="margin-top:12px; font-size:14px;"></div>
+        </div>
+      `;
+      document.getElementById('modalContent').innerHTML = html;
+      document.getElementById('fruitModal').style.display = 'flex';
+    }
+
+    function previewAvatar(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        document.getElementById('avatarResult').innerHTML = '<span style="color:red;">❌ 图片太大，请选择小于2MB的图片</span>';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxSize = 300;
+          let width = img.width, height = img.height;
+          if (width > height) {
+            if (width > maxSize) { height = height * maxSize / width; width = maxSize; }
+          } else {
+            if (height > maxSize) { width = width * maxSize / height; height = maxSize; }
+          }
+          canvas.width = width; canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          selectedAvatarBase64 = canvas.toDataURL('image/png');
+          document.getElementById('avatarPreview').src = selectedAvatarBase64;
+          document.getElementById('uploadBtn').style.display = 'inline-block';
+          document.getElementById('avatarResult').innerHTML = '<span style="color:#888;">图片已选择，点击"上传头像"即可</span>';
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function uploadAvatar() {
+      if (!selectedAvatarBase64) {
+        document.getElementById('avatarResult').innerHTML = '<span style="color:red;">请先选择图片</span>';
+        return;
+      }
+      const resultDiv = document.getElementById('avatarResult');
+      const uploadBtn = document.getElementById('uploadBtn');
+      resultDiv.innerHTML = '<span style="color:#1e88e5;">⏳ 正在上传...</span>';
+      uploadBtn.disabled = true;
+
+      fetch(AVATAR_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ student_name: studentName, image_base64: selectedAvatarBase64 })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          resultDiv.innerHTML = '<span style="color:#43a047;">✅ 上传成功！头像马上更新~</span>';
+          document.getElementById('studentAvatar').src = `${cdnBaseUrl}/images/avatars/${studentName}.png?t=${Date.now()}`;
+          setTimeout(() => closeModal(), 1800);
+        } else {
+          resultDiv.innerHTML = `<span style="color:red;">❌ ${data.message}</span>`;
+          uploadBtn.disabled = false;
+        }
+      })
+      .catch(error => {
+        resultDiv.innerHTML = `<span style="color:red;">❌ 网络错误：${error.message}</span>`;
+        uploadBtn.disabled = false;
+      });
     }
 
     // ========== 显示大图 ==========
@@ -356,7 +461,6 @@
 
         const card = document.createElement('div');
         card.className = 'tree-card';
-        // 为图片添加 title 和 onclick，实现气泡提示和点击查看大图
         const fogImageSrc = cat.fog_image;
         const categoryName = cat.name;
         card.innerHTML = `
