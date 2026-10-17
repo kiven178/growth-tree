@@ -153,13 +153,7 @@
         const SCORE_GOOD = MAX_SCORE * GOOD_RATIO;
         const SCORE_PASS = MAX_SCORE * PASS_RATIO;
 
-        const DEFAULT_DATA = [
-            { name: "林恬恬", score: 15 }, { name: "陈子轩", score: 15 }, { name: "李初夏", score: 14 },
-            { name: "周南希", score: 14 }, { name: "吴子涵", score: 13.5 }, { name: "郑子琪", score: 13 },
-            { name: "王雨桐", score: 12 }, { name: "张乐怡", score: 12 }, { name: "刘芷宁", score: 11 },
-            { name: "赵雨橙", score: 10.5 }, { name: "宋星辰", score: 10 }, { name: "杨子钰", score: 9 },
-            { name: "许贝儿", score: 8 }, { name: "唐一宸", score: 7 }, { name: "苏子川", score: 6 }
-        ];
+        const BAKED_DATA = [{"name": "\u7530\u6167\u99a8", "score": 15.0}, {"name": "\u5362\u9e23\u5c90", "score": 15.0}, {"name": "\u6853\u8363", "score": 15.0}, {"name": "\u6a59\u5b50", "score": 15.0}, {"name": "\u97e6\u4e1c\u8f89", "score": 15.0}, {"name": "\u82a6\u4f73\u94b0", "score": 15.0}, {"name": "\u5f20\u6587\u535a", "score": 15.0}, {"name": "\u6708\u6708", "score": 15.0}, {"name": "\u738b\u7d2b\u6db5", "score": 15.0}, {"name": "\u82d7\u82d7", "score": 15.0}, {"name": "\u8f9c\u7949\u9890", "score": 15.0}, {"name": "\u738b\u4e16\u6cf0", "score": 15.0}, {"name": "\u738b\u4e16\u6cf0", "score": 15.0}, {"name": "\u4e01\u5723\u6069", "score": 15.0}, {"name": "\u9ad8\u7389\u6765", "score": 15.0}, {"name": "\u6d1b\u6d1b", "score": 15.0}, {"name": "\u5218\u9aa5\u548c", "score": 15.0}, {"name": "\u5f20\u6587\u535a", "score": 15.0}, {"name": "\u82b1\u6735", "score": 15.0}, {"name": "\u9676\u5219\u5b87", "score": 10.0}, {"name": "\u6708\u6708", "score": 10.0}, {"name": "\u97e9\u7267\u91ce", "score": 10.0}, {"name": "\u6881\u99a8\u60a6", "score": 10.0}, {"name": "\u6731\u79b9\u970f", "score": 10.0}, {"name": "\u6731\u79b9\u970f", "score": 10.0}, {"name": "\u8983\u8bd7\u742a", "score": 10.0}, {"name": "\u8c22\u53f8\u4e49", "score": 10.0}, {"name": "\u738b\u714a\u7136", "score": 5.0}, {"name": "\u674e\u827e\u534e", "score": 5.0}, {"name": "\u6d1b\u6d1b", "score": 5.0}, {"name": "\u8428\u68d5\u5cfb", "score": 5.0}];
 
         let currentDataList = [];
         const rankContainer = document.getElementById('rankContainer');
@@ -329,9 +323,9 @@
         function startPressTimer() {
             pressTimer = setTimeout(() => {
                 localStorage.removeItem('studentLeaderboardData');
-                currentDataList = [...DEFAULT_DATA];
+                currentDataList = [...BAKED_DATA];
                 renderLeaderboard(currentDataList);
-                showToast("☀️ 已恢复默认示例数据（您的导入记录已清除）", 2500);
+                showToast("☀️ 已切换回官方榜单数据", 2500);
                 
                 mainTitle.style.transition = "0.1s";
                 mainTitle.style.opacity = "0.7";

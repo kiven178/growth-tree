@@ -40,7 +40,8 @@
     .encyclopedia-btn { background: #9c27b0; color: white; border: none; border-radius: 30px; padding: 4px 12px; font-size: 12px; cursor: pointer; margin-left: auto; flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px; }
     .gallery { margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 12px; }
     .gallery-images { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-    .gallery-images img { width: 60px; height: 60px; border-radius: 12px; border: 2px solid #ffb347; }
+    .gallery-images img { width: 60px; height: 60px; border-radius: 12px; border: 2px solid #ffb347; cursor: pointer; transition: transform 0.2s; object-fit: cover; }
+    .gallery-images img:hover { transform: scale(1.08); }
     .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 2000; overflow: auto; }
     .modal-card { background: white; border-radius: 32px; padding: 20px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; text-align: center; }
     .modal-close { float: right; font-size: 28px; cursor: pointer; }
@@ -113,6 +114,12 @@
       <div class="total-title">🌿 成长小树</div>
     </div>
     <div class="forest">
+            <!-- 顶部按钮：查看作业情况 -->
+      <div style="text-align:center; margin-bottom:16px;">
+        <a href="homework_ranking.html" style="display:inline-block; padding:10px 24px; background:linear-gradient(135deg,#ffb347,#ff8c00); color:white; text-decoration:none; border-radius:30px; font-weight:bold; box-shadow:0 4px 12px rgba(255,140,0,0.4); font-size:15px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          📋 查看上次课后作业情况
+        </a>
+      </div>
       <div class="forest-header">
         <div class="avatar" onclick="openAvatarUpload()" title="点击更换头像">
           <img id="studentAvatar"
@@ -125,7 +132,13 @@
         <div class="guide-text">✨ 点击恐龙图标，认识新恐龙！ ✨</div>
       </div>
       <div class="tree-list" id="treeList"></div>
-      
+      <!-- 我的笔记 -->
+      <div class="gallery" id="myNotesGallery">
+        <strong>📝 我的笔记</strong>
+        <div class="gallery-images" id="myNotesImages">
+          <div style="color:#999; font-size:13px; padding:10px;">⏳ 正在加载...</div>
+        </div>
+      </div>
     </div>
     <!-- 小信箱（课后作业） -->
     <div class="secret-letter" onclick="showHomework()">✉️</div>
@@ -137,7 +150,7 @@
 
   <script>
     const pagePwd = "5233";
-    const version = "20261012135239";
+    const version = "20261017152811";
     const eggIcon = "🥚";
     const dinoIcon = "🦕";
     const globalLatestId = 6;
@@ -507,12 +520,75 @@
     }
 
     function closeModal() { document.getElementById('fruitModal').style.display = 'none'; }
+    // ========== 加载我的笔记 ==========
+function tryLoadImage(url) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(url);
+        img.onerror = () => resolve(null);
+        img.src = url;
+    });
+}
 
+async function loadMyNotes() {
+    const container = document.getElementById('myNotesImages');
+    const maxLesson = globalLatestId;
+
+    // 还没上过课
+    if (!maxLesson || maxLesson <= 0) {
+        container.innerHTML = '<div style="color:#999; font-size:13px; padding:10px; text-align:center;">还没有上传笔记哦~</div>';
+        return;
+    }
+
+    const encodedName = encodeURIComponent(studentName);
+    const imageUrls = [];
+
+    // 遍历所有已经上过的课次，从第1课到当前课
+    for (let lesson = 1; lesson <= maxLesson; lesson++) {
+        const baseUrl = `${cdnBaseUrl}/images/note/${lesson}`;
+
+        // 并发探测这个课次下该学生的笔记（最多 3 张，够用了）
+        const probes = [
+            tryLoadImage(`${baseUrl}/${encodedName}.png`),
+            tryLoadImage(`${baseUrl}/${encodedName}_2.png`),
+            tryLoadImage(`${baseUrl}/${encodedName}_3.png`)
+        ];
+        const results = await Promise.all(probes);
+
+        // 按顺序放入结果（过滤掉 null）
+        results.forEach(url => {
+            if (url) imageUrls.push(url);
+        });
+    }
+
+    // 全部课次都没找到笔记
+    if (imageUrls.length === 0) {
+        container.innerHTML = '<div style="color:#999; font-size:13px; padding:10px; text-align:center;">还没有上传笔记哦~</div>';
+        return;
+    }
+
+    // 渲染所有笔记图片
+    container.innerHTML = imageUrls.map(url =>
+        `<img src="${url}" loading="lazy" onclick="showNoteBigImage('${url}')" onerror="this.style.display='none'">`
+    ).join('');
+}
+
+// 点击笔记图片查看大图
+function showNoteBigImage(url) {
+    const html = `
+        <div class="big-image-container">
+            <img src="${url}" alt="我的笔记">
+        </div>
+    `;
+    document.getElementById('modalContent').innerHTML = html;
+    document.getElementById('fruitModal').style.display = 'flex';
+}
     window.addEventListener('load', () => {
-      if ("nan" && "nan" !== "") {
+    if ("nan" && "nan" !== "") {
         bgMusic.load();
         bgMusic.play().then(() => musicPlaying = true).catch(() => {});
       }
+      loadMyNotes();
     });
   </script>
 </body>
