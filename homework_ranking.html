@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>作业得分荣誉榜 | 阳光艳丽 · 等级制</title>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        
+        body {
+            background: linear-gradient(135deg, #FFE5B4 0%, #FFB347 50%, #FF8C42 100%);
+            font-family: 'Segoe UI', 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, 'Roboto', sans-serif;
+            padding: 2rem 1rem 2.5rem;
+            min-height: 100vh;
+            position: relative;
+        }
+        body::before { content: "🏆"; font-size: 140px; position: fixed; bottom: -20px; right: -30px; opacity: 0.1; pointer-events: none; transform: rotate(-15deg); }
+        body::after { content: "⭐"; font-size: 180px; position: fixed; top: -40px; left: -40px; opacity: 0.1; pointer-events: none; transform: rotate(10deg); }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: rgba(255, 248, 225, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 56px;
+            box-shadow: 0 25px 45px -12px rgba(200, 80, 0, 0.3);
+            padding: 1.8rem 1.5rem 2rem;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 215, 150, 0.8);
+        }
+
+        .title-area { text-align: center; margin-bottom: 1.8rem; }
+        h1 {
+            font-size: 2.5rem; letter-spacing: 3px;
+            background: linear-gradient(135deg, #F39C12, #E67E22, #D35400);
+            background-clip: text; -webkit-background-clip: text; color: transparent;
+            text-shadow: 2px 2px 20px rgba(255, 160, 0, 0.3);
+            display: inline-block; padding-bottom: 8px; border-bottom: 4px solid #FFB347;
+            font-weight: 800; cursor: default;
+        }
+
+        /* 分组区块 */
+        .group-section {
+            margin-bottom: 2.5rem;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 40px;
+            padding: 1.5rem 1rem;
+            border: 2px dashed #FFD966;
+        }
+
+        .group-title {
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 4px solid;
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            letter-spacing: 2px;
+        }
+
+        .group-title.excellent { color: #D35400; border-color: #FFD700; text-shadow: 0 2px 4px rgba(255, 215, 0, 0.4); }
+        .group-title.good { color: #1E8449; border-color: #58D68D; text-shadow: 0 2px 4px rgba(88, 214, 141, 0.4); }
+        .group-title.pass { color: #B45F1B; border-color: #FFB347; text-shadow: 0 2px 4px rgba(255, 179, 71, 0.4); }
+        .group-title.fail { color: #922B21; border-color: #E6B0AA; text-shadow: 0 2px 4px rgba(230, 176, 170, 0.4); }
+
+        /* 网格布局 */
+        .rank-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2rem 0.8rem; justify-items: center; align-items: center; }
+
+        /* 学生卡片基础样式 */
+        .student-card {
+            position: relative; width: 100%; text-align: center;
+            padding: 1.2rem 0.2rem 0.8rem 0.2rem; border-radius: 30px;
+            font-weight: 600; letter-spacing: 1px;
+            transition: all 0.2s ease;
+            display: flex; flex-direction: column; align-items: center;
+            background: #FFF9E8;
+        }
+        .student-card:hover { transform: translateY(-5px) scale(1.03); }
+
+        /* 优秀卡片样式 (金) */
+        .card-excellent { border: 3px solid #FFD700; background: linear-gradient(145deg, #FFFBE6, #FFF0B3); box-shadow: 0 10px 15px -10px rgba(255, 215, 0, 0.5); }
+        .card-excellent .student-score { color: #D35400; }
+
+        /* 良好卡片样式 (绿) */
+        .card-good { border: 3px solid #58D68D; background: linear-gradient(145deg, #EAFAF1, #D5F5E3); box-shadow: 0 10px 15px -10px rgba(88, 214, 141, 0.5); }
+        .card-good .student-score { color: #1E8449; }
+
+        /* 合格卡片样式 (橙) */
+        .card-pass { border: 3px solid #FFB347; background: linear-gradient(145deg, #FFF5E6, #FFE8CC); box-shadow: 0 10px 15px -10px rgba(255, 179, 71, 0.5); }
+        .card-pass .student-score { color: #B45F1B; }
+
+        /* 加油卡片样式 (灰红) */
+        .card-fail { border: 3px solid #E6B0AA; background: linear-gradient(145deg, #FDEDEC, #FADBD8); box-shadow: 0 10px 15px -10px rgba(230, 176, 170, 0.5); }
+        .card-fail .student-score { color: #922B21; }
+
+        .student-name { font-size: 1.1rem; margin-bottom: 6px; font-weight: 800; color: #5D4037; white-space: nowrap; overflow-x: auto; text-overflow: ellipsis; width: 100%; padding: 0 5px; }
+        .student-score { font-size: 1.5rem; font-weight: 900; font-family: 'Segoe UI', monospace; }
+
+        /* 移动端适配 */
+        @media (max-width: 900px) { .rank-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (max-width: 640px) {
+            .rank-grid { grid-template-columns: repeat(3, 1fr); gap: 0.8rem 0.4rem; }
+            .student-card { padding: 0.9rem 0.1rem 0.6rem 0.1rem; border-radius: 20px; }
+            .student-name { font-size: 0.85rem; }
+            .student-score { font-size: 1.1rem; }
+            .group-title { font-size: 1.2rem; }
+            h1 { font-size: 1.8rem; }
+        }
+
+        .empty-rank { text-align: center; padding: 3rem 1rem; background: #FFF3E0; border-radius: 56px; color: #E67E22; font-size: 1rem; border: 2px dashed #FFB347; margin-top: 1rem; font-weight: 500; }
+        .stat-badge { text-align: center; margin-top: 24px; font-size: 0.9rem; color: #B45F1B; background: #FFE8C7; width: fit-content; margin-left: auto; margin-right: auto; padding: 6px 22px; border-radius: 60px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+
+        .encouragement { text-align: center; margin: 30px 15px 15px 15px; padding: 18px 20px; background: linear-gradient(120deg, #FFE0A3, #FFC285); border-radius: 60px; border: 2px solid #FFA559; box-shadow: 0 8px 18px rgba(200, 100, 0, 0.2); }
+        .encouragement p { font-size: 1.25rem; font-weight: 800; color: #B64900; letter-spacing: 1px; line-height: 1.4; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; text-shadow: 0 1px 0 rgba(255,255,200,0.8); }
+        .encouragement .emoji-deco { font-size: 1.8rem; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1)); }
+        @media (max-width: 640px) { .encouragement p { font-size: 1rem; } .encouragement .emoji-deco { font-size: 1.4rem; } }
+
+        footer { text-align: center; margin-top: 1.2rem; font-size: 0.75rem; color: #E67E22; font-weight: 500; }
+        .toast-tip { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(230, 100, 30, 0.95); backdrop-filter: blur(12px); color: #FFF9E8; padding: 10px 26px; border-radius: 60px; font-size: 0.85rem; font-weight: 600; z-index: 1000; white-space: nowrap; box-shadow: 0 6px 14px rgba(0,0,0,0.2); pointer-events: none; }
+        #hiddenExcelInput { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="title-area">
+        <h1 id="mainTitle">🏆 作业得分荣誉榜 🏆</h1>
+    </div>
+
+    <div id="rankContainer">
+        <div class="empty-rank">
+            ☀️ 正在加载排行榜...
+        </div>
+    </div>
+
+    <div class="stat-badge" id="statBadge">
+        🌟 全力以赴，每一次进步都值得喝彩 🌟
+    </div>
+    <footer>
+        🌈 阳光灿烂 · 每一步都算数
+    </footer>
+</div>
+
+<input type="file" id="hiddenExcelInput" accept=".xlsx, .xls, .csv" />
+
+<script>
+    (function() {
+        // ================= 配置区域 =================
+        // 【重要】在这里修改你本次作业的满分！
+        const MAX_SCORE = 15;
+
+        // 计算百分比的分数线
+        const EXCELLENT_RATIO = 0.9; // 90% 以上为优秀
+        const GOOD_RATIO = 0.8;      // 80% 以上为良好
+        const PASS_RATIO = 0.6;      // 60% 以上为合格
+
+        // 动态计算实际分数
+        const SCORE_EXCELLENT = MAX_SCORE * EXCELLENT_RATIO;
+        const SCORE_GOOD = MAX_SCORE * GOOD_RATIO;
+        const SCORE_PASS = MAX_SCORE * PASS_RATIO;
+        // ============================================
+
+        // 预设示例数据（按15分满分配置）
+        const DEFAULT_DATA = [
+            { name: "林恬恬", score: 15 }, { name: "陈子轩", score: 15 }, { name: "李初夏", score: 14 },
+            { name: "周南希", score: 14 }, { name: "吴子涵", score: 13.5 }, { name: "郑子琪", score: 13 },
+            { name: "王雨桐", score: 12 }, { name: "张乐怡", score: 12 }, { name: "刘芷宁", score: 11 },
+            { name: "赵雨橙", score: 10.5 }, { name: "宋星辰", score: 10 }, { name: "杨子钰", score: 9 },
+            { name: "许贝儿", score: 8 }, { name: "唐一宸", score: 7 }, { name: "苏子川", score: 6 }
+        ];
+
+        let currentDataList = [];
+        const rankContainer = document.getElementById('rankContainer');
+        const statBadge = document.getElementById('statBadge');
+        const hiddenFileInput = document.getElementById('hiddenExcelInput');
+        const mainTitle = document.getElementById('mainTitle');
+
+        // 根据分数获取级别配置（判断条件全部基于动态计算的分数线）
+        function getLevelInfo(score) {
+            if (score >= SCORE_EXCELLENT) {
+                return { key: 'excellent', title: `🌟 优秀 (${SCORE_EXCELLENT} - ${MAX_SCORE}分) 🌟`, icon: '🏅', cssClass: 'card-excellent' };
+            } else if (score >= SCORE_GOOD) {
+                return { key: 'good', title: `👍 良好 (${SCORE_GOOD} - ${SCORE_EXCELLENT}分) 👍`, icon: '🎖️', cssClass: 'card-good' };
+            } else if (score >= SCORE_PASS) {
+                return { key: 'pass', title: `🎈 合格 (${SCORE_PASS} - ${SCORE_GOOD}分) 🎈`, icon: '🎈', cssClass: 'card-pass' };
+            } else {
+                return { key: 'fail', title: `💪 加油 (0 - ${SCORE_PASS}分) 💪`, icon: '💪', cssClass: 'card-fail' };
+            }
+        }
+
+        // ----------------------------- 渲染荣誉榜 -----------------------------
+        function renderLeaderboard(dataArray) {
+            if (!dataArray || dataArray.length === 0) {
+                rankContainer.innerHTML = `
+                    <div class="empty-rank">🍊 暂无得分数据<br>双击页面任意位置，导入 Excel 名单 🌟</div>
+                    <div class="encouragement"><p><span class="emoji-deco">☀️</span>努力就有回报，期待你的名字闪耀登场！<span class="emoji-deco">⭐</span></p></div>
+                `;
+                if (statBadge) statBadge.innerHTML = `📋 暂无数据 · 双击页面导入 Excel ✨`;
+                return;
+            }
+
+            // 按分数从高到低进行初步排序，让高分层级在上，低分层级在下
+            const sortedData = [...dataArray].sort((a, b) => b.score - a.score);
+
+            // 分组容器
+            const groups = { excellent: [], good: [], pass: [], fail: [] };
+
+            // 将学生按分数归类
+            sortedData.forEach(student => {
+                const level = getLevelInfo(student.score).key;
+                groups[level].push(student);
+            });
+
+            let htmlContent = '';
+
+            // 遍历每个分组，生成HTML结构
+            Object.keys(groups).forEach(levelKey => {
+                const students = groups[levelKey];
+                if (students.length === 0) return; // 没有该等级的学生就不展示该区块
+
+                const levelInfo = getLevelInfo(students[0].score); // 获取该组的配置信息
+
+                let gridHTML = `<div class="rank-grid">`;
+                students.forEach(student => {
+                    let displayName = student.name;
+                    if (displayName.length > 8) displayName = displayName.slice(0, 7) + "..";
+
+                    // 同一等级内，所有孩子使用相同的图标和样式，不再有排名前后的区别
+                    gridHTML += `
+                        <div class="student-card ${levelInfo.cssClass}">
+                            <div class="student-name">${levelInfo.icon} ${escapeHtml(displayName)}</div>
+                            <div class="student-score">${student.score} 分</div>
+                        </div>`;
+                });
+                gridHTML += `</div>`;
+
+                htmlContent += `
+                    <div class="group-section">
+                        <div class="group-title ${levelKey}">${levelInfo.title}</div>
+                        ${gridHTML}
+                    </div>
+                `;
+            });
+
+            const totalCount = sortedData.length;
+            const encouragementHTML = `
+                <div class="encouragement">
+                    <p><span class="emoji-deco">🏆</span>恭喜以上同学获得荣誉等级！每一次认真作答，都在为未来蓄力！<span class="emoji-deco">🎉</span></p>
+                </div>`;
+
+            rankContainer.innerHTML = htmlContent + encouragementHTML;
+            if (statBadge) statBadge.innerHTML = `🎉 本次作业（满分${MAX_SCORE}分）共 ${totalCount} 位同学上榜 🎉`;
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : m === '<' ? '&lt;' : m === '>' ? '&gt;' : m; })
+                      .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) { return c; });
+        }
+
+        // ----------------------------- Excel 解析 -----------------------------
+        function parseExcelToData(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const data = new Uint8Array(e.target.result);
+                    try {
+                        const workbook = XLSX.read(data, { type: 'array', cellDates: false, defval: "" });
+                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: "" });
+
+                        if (!rows || rows.length === 0) { reject(new Error("Excel 文件为空")); return; }
+
+                        const dataList = [];
+                        for (let i = 1; i < rows.length; i++) {
+                            const row = rows[i];
+                            if (!row || row.length < 2) continue;
+                            let name = String(row[0]).trim();
+                            let score = Number(row[1]);
+                            if (name !== "" && !isNaN(score)) {
+                                dataList.push({ name: name, score: score });
+                            }
+                        }
+                        if (dataList.length === 0) {
+                            reject(new Error("未检测到有效数据，请确保 A 列是姓名，B 列是分数，且从第二行开始填写"));
+                        } else {
+                            resolve(dataList);
+                        }
+                    } catch (err) { reject(new Error("解析失败：" + err.message)); }
+                };
+                reader.onerror = () => reject(new Error("文件读取失败，请重试"));
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        let toastTimeout = null;
+        function showToast(message, duration = 2800) {
+            const existingToast = document.querySelector('.toast-tip');
+            if (existingToast) existingToast.remove();
+            const toastDiv = document.createElement('div');
+            toastDiv.className = 'toast-tip';
+            toastDiv.innerText = message;
+            document.body.appendChild(toastDiv);
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => { if (toastDiv && toastDiv.remove) toastDiv.remove(); }, duration);
+        }
+
+        function handleFileSelected(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (!['xlsx', 'xls', 'csv'].includes(ext)) {
+                showToast("📁 请上传 .xlsx 或 .xls 格式的 Excel 文件", 2000);
+                hiddenFileInput.value = '';
+                return;
+            }
+
+            showToast("📂 正在解析 Excel，请稍后...", 1500);
+            parseExcelToData(file)
+                .then(data => {
+                    if (data && data.length > 0) {
+                        currentDataList = [...data];
+                        localStorage.setItem('studentLeaderboardData', JSON.stringify(currentDataList));
+                        renderLeaderboard(currentDataList);
+                        showToast(`✅ 导入成功！共 ${data.length} 位同学上榜，数据已保存`, 2500);
+                    } else {
+                        showToast("⚠️ 未找到有效数据，请检查Excel格式", 2500);
+                    }
+                })
+                .catch(err => { showToast(`❌ 导入失败：${err.message}`, 3000); })
+                .finally(() => { hiddenFileInput.value = ''; });
+        }
+
+        // ----------------------------- 隐藏入口与重置 -----------------------------
+        document.body.addEventListener('dblclick', (e) => {
+            e.stopPropagation();
+            hiddenFileInput.click();
+            showToast("✨ 双击唤起导入 · 请选择 Excel 文件", 1500);
+        });
+
+        let pressTimer = null;
+        function startPressTimer() {
+            pressTimer = setTimeout(() => {
+                localStorage.removeItem('studentLeaderboardData');
+                currentDataList = [...DEFAULT_DATA];
+                renderLeaderboard(currentDataList);
+                showToast("☀️ 已恢复默认示例数据（您的导入记录已清除）", 2500);
+                
+                mainTitle.style.transition = "0.1s";
+                mainTitle.style.opacity = "0.7";
+                setTimeout(() => { mainTitle.style.opacity = "1"; }, 200);
+                pressTimer = null;
+            }, 500);
+        }
+        function cancelPressTimer() { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } }
+        
+        mainTitle.addEventListener('mousedown', startPressTimer);
+        mainTitle.addEventListener('mouseup', cancelPressTimer);
+        mainTitle.addEventListener('mouseleave', cancelPressTimer);
+        mainTitle.addEventListener('touchstart', startPressTimer, { passive: true });
+        mainTitle.addEventListener('touchend', cancelPressTimer);
+        mainTitle.addEventListener('touchcancel', cancelPressTimer);
+        mainTitle.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        // ----------------------------- 初始化 -----------------------------
+        function initBoard() {
+            const savedData = localStorage.getItem('studentLeaderboardData');
+            if (savedData) {
+                try {
+                    currentDataList = JSON.parse(savedData);
+                    if (Array.isArray(currentDataList) && currentDataList.length > 0 && currentDataList[0].name) {
+                        renderLeaderboard(currentDataList);
+                        showToast("✅ 已加载您上次导入的排行榜数据", 2000);
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("本地数据损坏，使用默认数据", e);
+                    localStorage.removeItem('studentLeaderboardData');
+                }
+            }
+            currentDataList = [...DEFAULT_DATA];
+            renderLeaderboard(currentDataList);
+        }
+
+        hiddenFileInput.addEventListener('change', handleFileSelected);
+        initBoard();
+    })();
+</script>
+</body>
+</html>
