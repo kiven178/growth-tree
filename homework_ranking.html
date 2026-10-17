@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
     <title>作业得分荣誉榜 | 阳光艳丽 · 等级制</title>
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <!-- 这里加了 onerror 处理，防止网络差时卡死网页 -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js" onerror="alert('⚠️ Excel解析库加载失败，请检查网络后刷新网页！')"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         
@@ -40,7 +41,6 @@
             font-weight: 800; cursor: default;
         }
 
-        /* 分组区块 */
         .group-section {
             margin-bottom: 2.5rem;
             background: rgba(255, 255, 255, 0.4);
@@ -68,10 +68,8 @@
         .group-title.pass { color: #B45F1B; border-color: #FFB347; text-shadow: 0 2px 4px rgba(255, 179, 71, 0.4); }
         .group-title.fail { color: #922B21; border-color: #E6B0AA; text-shadow: 0 2px 4px rgba(230, 176, 170, 0.4); }
 
-        /* 网格布局 */
         .rank-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2rem 0.8rem; justify-items: center; align-items: center; }
 
-        /* 学生卡片基础样式 */
         .student-card {
             position: relative; width: 100%; text-align: center;
             padding: 1.2rem 0.2rem 0.8rem 0.2rem; border-radius: 30px;
@@ -82,26 +80,18 @@
         }
         .student-card:hover { transform: translateY(-5px) scale(1.03); }
 
-        /* 优秀卡片样式 (金) */
         .card-excellent { border: 3px solid #FFD700; background: linear-gradient(145deg, #FFFBE6, #FFF0B3); box-shadow: 0 10px 15px -10px rgba(255, 215, 0, 0.5); }
         .card-excellent .student-score { color: #D35400; }
-
-        /* 良好卡片样式 (绿) */
         .card-good { border: 3px solid #58D68D; background: linear-gradient(145deg, #EAFAF1, #D5F5E3); box-shadow: 0 10px 15px -10px rgba(88, 214, 141, 0.5); }
         .card-good .student-score { color: #1E8449; }
-
-        /* 合格卡片样式 (橙) */
         .card-pass { border: 3px solid #FFB347; background: linear-gradient(145deg, #FFF5E6, #FFE8CC); box-shadow: 0 10px 15px -10px rgba(255, 179, 71, 0.5); }
         .card-pass .student-score { color: #B45F1B; }
-
-        /* 加油卡片样式 (灰红) */
         .card-fail { border: 3px solid #E6B0AA; background: linear-gradient(145deg, #FDEDEC, #FADBD8); box-shadow: 0 10px 15px -10px rgba(230, 176, 170, 0.5); }
         .card-fail .student-score { color: #922B21; }
 
         .student-name { font-size: 1.1rem; margin-bottom: 6px; font-weight: 800; color: #5D4037; white-space: nowrap; overflow-x: auto; text-overflow: ellipsis; width: 100%; padding: 0 5px; }
         .student-score { font-size: 1.5rem; font-weight: 900; font-family: 'Segoe UI', monospace; }
 
-        /* 移动端适配 */
         @media (max-width: 900px) { .rank-grid { grid-template-columns: repeat(4, 1fr); } }
         @media (max-width: 640px) {
             .rank-grid { grid-template-columns: repeat(3, 1fr); gap: 0.8rem 0.4rem; }
@@ -133,39 +123,36 @@
     </div>
 
     <div id="rankContainer">
-        <div class="empty-rank">
-            ☀️ 正在加载排行榜...
-        </div>
+        <div class="empty-rank">☀️ 正在加载排行榜...</div>
     </div>
 
-    <div class="stat-badge" id="statBadge">
-        🌟 全力以赴，每一次进步都值得喝彩 🌟
-    </div>
-    <footer>
-        🌈 阳光灿烂 · 每一步都算数
-    </footer>
+    <div class="stat-badge" id="statBadge">🌟 全力以赴，每一次进步都值得喝彩 🌟</div>
+    <footer>🌈 阳光灿烂 · 每一步都算数</footer>
 </div>
 
 <input type="file" id="hiddenExcelInput" accept=".xlsx, .xls, .csv" />
 
 <script>
-    (function() {
+    // 使用 DOMContentLoaded 确保 HTML 结构加载完成后再执行 JS
+    document.addEventListener('DOMContentLoaded', function() {
+        // ================= 1. 紧急救援：如果网页卡死，通过 URL 传参清空缓存 =================
+        if (window.location.search.includes('clear=1')) {
+            localStorage.removeItem('studentLeaderboardData');
+            alert('✅ 本地缓存已成功清除，网页将恢复默认状态！');
+            // 清除地址栏参数
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
         // ================= 配置区域 =================
-        // 【重要】在这里修改你本次作业的满分！
         const MAX_SCORE = 15;
+        const EXCELLENT_RATIO = 0.9;
+        const GOOD_RATIO = 0.8;
+        const PASS_RATIO = 0.6;
 
-        // 计算百分比的分数线
-        const EXCELLENT_RATIO = 0.9; // 90% 以上为优秀
-        const GOOD_RATIO = 0.8;      // 80% 以上为良好
-        const PASS_RATIO = 0.6;      // 60% 以上为合格
-
-        // 动态计算实际分数
         const SCORE_EXCELLENT = MAX_SCORE * EXCELLENT_RATIO;
         const SCORE_GOOD = MAX_SCORE * GOOD_RATIO;
         const SCORE_PASS = MAX_SCORE * PASS_RATIO;
-        // ============================================
 
-        // 预设示例数据（按15分满分配置）
         const DEFAULT_DATA = [
             { name: "林恬恬", score: 15 }, { name: "陈子轩", score: 15 }, { name: "李初夏", score: 14 },
             { name: "周南希", score: 14 }, { name: "吴子涵", score: 13.5 }, { name: "郑子琪", score: 13 },
@@ -180,20 +167,13 @@
         const hiddenFileInput = document.getElementById('hiddenExcelInput');
         const mainTitle = document.getElementById('mainTitle');
 
-        // 根据分数获取级别配置（判断条件全部基于动态计算的分数线）
         function getLevelInfo(score) {
-            if (score >= SCORE_EXCELLENT) {
-                return { key: 'excellent', title: `🌟 优秀 (${SCORE_EXCELLENT} - ${MAX_SCORE}分) 🌟`, icon: '🏅', cssClass: 'card-excellent' };
-            } else if (score >= SCORE_GOOD) {
-                return { key: 'good', title: `👍 良好 (${SCORE_GOOD} - ${SCORE_EXCELLENT}分) 👍`, icon: '🎖️', cssClass: 'card-good' };
-            } else if (score >= SCORE_PASS) {
-                return { key: 'pass', title: `🎈 合格 (${SCORE_PASS} - ${SCORE_GOOD}分) 🎈`, icon: '🎈', cssClass: 'card-pass' };
-            } else {
-                return { key: 'fail', title: `💪 加油 (0 - ${SCORE_PASS}分) 💪`, icon: '💪', cssClass: 'card-fail' };
-            }
+            if (score >= SCORE_EXCELLENT) return { key: 'excellent', title: `🌟 优秀 (${SCORE_EXCELLENT} - ${MAX_SCORE}分) 🌟`, icon: '🏅', cssClass: 'card-excellent' };
+            if (score >= SCORE_GOOD) return { key: 'good', title: `👍 良好 (${SCORE_GOOD} - ${SCORE_EXCELLENT}分) 👍`, icon: '🎖️', cssClass: 'card-good' };
+            if (score >= SCORE_PASS) return { key: 'pass', title: `🎈 合格 (${SCORE_PASS} - ${SCORE_GOOD}分) 🎈`, icon: '🎈', cssClass: 'card-pass' };
+            return { key: 'fail', title: `💪 加油 (0 - ${SCORE_PASS}分) 💪`, icon: '💪', cssClass: 'card-fail' };
         }
 
-        // ----------------------------- 渲染荣誉榜 -----------------------------
         function renderLeaderboard(dataArray) {
             if (!dataArray || dataArray.length === 0) {
                 rankContainer.innerHTML = `
@@ -204,33 +184,24 @@
                 return;
             }
 
-            // 按分数从高到低进行初步排序，让高分层级在上，低分层级在下
             const sortedData = [...dataArray].sort((a, b) => b.score - a.score);
-
-            // 分组容器
             const groups = { excellent: [], good: [], pass: [], fail: [] };
 
-            // 将学生按分数归类
             sortedData.forEach(student => {
                 const level = getLevelInfo(student.score).key;
                 groups[level].push(student);
             });
 
             let htmlContent = '';
-
-            // 遍历每个分组，生成HTML结构
             Object.keys(groups).forEach(levelKey => {
                 const students = groups[levelKey];
-                if (students.length === 0) return; // 没有该等级的学生就不展示该区块
-
-                const levelInfo = getLevelInfo(students[0].score); // 获取该组的配置信息
+                if (students.length === 0) return;
+                const levelInfo = getLevelInfo(students[0].score);
 
                 let gridHTML = `<div class="rank-grid">`;
                 students.forEach(student => {
                     let displayName = student.name;
                     if (displayName.length > 8) displayName = displayName.slice(0, 7) + "..";
-
-                    // 同一等级内，所有孩子使用相同的图标和样式，不再有排名前后的区别
                     gridHTML += `
                         <div class="student-card ${levelInfo.cssClass}">
                             <div class="student-name">${levelInfo.icon} ${escapeHtml(displayName)}</div>
@@ -247,14 +218,13 @@
                 `;
             });
 
-            const totalCount = sortedData.length;
             const encouragementHTML = `
                 <div class="encouragement">
                     <p><span class="emoji-deco">🏆</span>恭喜以上同学获得荣誉等级！每一次认真作答，都在为未来蓄力！<span class="emoji-deco">🎉</span></p>
                 </div>`;
 
             rankContainer.innerHTML = htmlContent + encouragementHTML;
-            if (statBadge) statBadge.innerHTML = `🎉 本次作业（满分${MAX_SCORE}分）共 ${totalCount} 位同学上榜 🎉`;
+            if (statBadge) statBadge.innerHTML = `🎉 本次作业（满分${MAX_SCORE}分）共 ${sortedData.length} 位同学上榜 🎉`;
         }
 
         function escapeHtml(str) {
@@ -262,9 +232,14 @@
                       .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) { return c; });
         }
 
-        // ----------------------------- Excel 解析 -----------------------------
+        // ----------------------------- Excel 解析与存储 -----------------------------
         function parseExcelToData(file) {
             return new Promise((resolve, reject) => {
+                if (typeof XLSX === 'undefined') {
+                    reject(new Error("Excel 解析组件未加载，请检查网络连接后刷新页面。"));
+                    return;
+                }
+                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const data = new Uint8Array(e.target.result);
@@ -325,18 +300,25 @@
                 .then(data => {
                     if (data && data.length > 0) {
                         currentDataList = [...data];
-                        localStorage.setItem('studentLeaderboardData', JSON.stringify(currentDataList));
+                        // 关键逻辑：尝试存入 localStorage
+                        try {
+                            localStorage.setItem('studentLeaderboardData', JSON.stringify(currentDataList));
+                        } catch (e) {
+                            console.error("本地存储失败：", e);
+                            showToast("⚠️ 数据量过大，本次数据无法保存到本地！", 3000);
+                        }
+                        
                         renderLeaderboard(currentDataList);
                         showToast(`✅ 导入成功！共 ${data.length} 位同学上榜，数据已保存`, 2500);
                     } else {
                         showToast("⚠️ 未找到有效数据，请检查Excel格式", 2500);
                     }
                 })
-                .catch(err => { showToast(`❌ 导入失败：${err.message}`, 3000); })
+                .catch(err => { showToast(`❌ 导入失败：${err.message}`, 3500); })
                 .finally(() => { hiddenFileInput.value = ''; });
         }
 
-        // ----------------------------- 隐藏入口与重置 -----------------------------
+        // ----------------------------- 交互与重置 -----------------------------
         document.body.addEventListener('dblclick', (e) => {
             e.stopPropagation();
             hiddenFileInput.click();
@@ -369,27 +351,33 @@
 
         // ----------------------------- 初始化 -----------------------------
         function initBoard() {
-            const savedData = localStorage.getItem('studentLeaderboardData');
-            if (savedData) {
-                try {
+            try {
+                const savedData = localStorage.getItem('studentLeaderboardData');
+                if (savedData) {
                     currentDataList = JSON.parse(savedData);
-                    if (Array.isArray(currentDataList) && currentDataList.length > 0 && currentDataList[0].name) {
+                    // 严格校验数据结构，防止坏数据导致白屏
+                    if (Array.isArray(currentDataList) && currentDataList.length > 0 && currentDataList[0].hasOwnProperty('name') && currentDataList[0].hasOwnProperty('score')) {
                         renderLeaderboard(currentDataList);
                         showToast("✅ 已加载您上次导入的排行榜数据", 2000);
                         return;
+                    } else {
+                        // 数据结构不对，直接清空
+                        localStorage.removeItem('studentLeaderboardData');
                     }
-                } catch (e) {
-                    console.warn("本地数据损坏，使用默认数据", e);
-                    localStorage.removeItem('studentLeaderboardData');
                 }
+            } catch (e) {
+                console.warn("本地数据损坏，已清空。", e);
+                localStorage.removeItem('studentLeaderboardData');
             }
+            
+            // 如果没有存过数据，或者数据损坏，使用默认数据
             currentDataList = [...DEFAULT_DATA];
             renderLeaderboard(currentDataList);
         }
 
         hiddenFileInput.addEventListener('change', handleFileSelected);
         initBoard();
-    })();
+    });
 </script>
 </body>
 </html>
