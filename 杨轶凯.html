@@ -150,7 +150,7 @@
 
   <script>
     const pagePwd = "6633";
-    const version = "20261017152811";
+    const version = "20261018151347";
     const eggIcon = "🥚";
     const dinoIcon = "🦕";
     const globalLatestId = 4;
@@ -550,8 +550,12 @@ async function loadMyNotes() {
         // 并发探测这个课次下该学生的笔记（最多 3 张，够用了）
         const probes = [
             tryLoadImage(`${baseUrl}/${encodedName}.png`),
+            tryLoadImage(`${baseUrl}/${encodedName}.jpg`),
+            tryLoadImage(`${baseUrl}/${encodedName}.jpeg`),
             tryLoadImage(`${baseUrl}/${encodedName}_2.png`),
-            tryLoadImage(`${baseUrl}/${encodedName}_3.png`)
+            tryLoadImage(`${baseUrl}/${encodedName}_2.jpg`),
+            tryLoadImage(`${baseUrl}/${encodedName}_3.png`),
+            tryLoadImage(`${baseUrl}/${encodedName}_3.jpg`)
         ];
         const results = await Promise.all(probes);
 
