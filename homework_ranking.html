@@ -118,8 +118,16 @@
 <body>
 
 <div class="container">
-    <div class="title-area">
+        <div class="title-area">
         <h1 id="mainTitle">🏆 作业得分荣誉榜 🏆</h1>
+
+        <!-- 👇 加上这一行提示文字 👇 -->
+        <div style="text-align: center; margin-top: 12px;">
+            <span style="display: inline-block; font-size: 0.95rem; font-weight: 600; color: #D35400; background: #FFF3E0; padding: 6px 18px; border-radius: 30px; border: 1.5px dashed #FFB347; box-shadow: 0 2px 6px rgba(255, 179, 71, 0.2);">
+                ⏰ 每周一下午更新最新情况
+            </span>
+        </div>
+
     </div>
 
     <div id="rankContainer">
@@ -153,7 +161,7 @@
         const SCORE_GOOD = MAX_SCORE * GOOD_RATIO;
         const SCORE_PASS = MAX_SCORE * PASS_RATIO;
 
-        const BAKED_DATA = [{"name": "\u7530\u6167\u99a8", "score": 15.0}, {"name": "\u5362\u9e23\u5c90", "score": 15.0}, {"name": "\u6853\u8363", "score": 15.0}, {"name": "\u6a59\u5b50", "score": 15.0}, {"name": "\u97e6\u4e1c\u8f89", "score": 15.0}, {"name": "\u82a6\u4f73\u94b0", "score": 15.0}, {"name": "\u5f20\u6587\u535a", "score": 15.0}, {"name": "\u6708\u6708", "score": 15.0}, {"name": "\u738b\u7d2b\u6db5", "score": 15.0}, {"name": "\u82d7\u82d7", "score": 15.0}, {"name": "\u8f9c\u7949\u9890", "score": 15.0}, {"name": "\u738b\u4e16\u6cf0", "score": 15.0}, {"name": "\u4e01\u5723\u6069", "score": 15.0}, {"name": "\u9ad8\u7389\u6765", "score": 15.0}, {"name": "\u6d1b\u6d1b", "score": 15.0}, {"name": "\u5218\u9aa5\u548c", "score": 15.0}, {"name": "\u82b1\u6735", "score": 15.0}, {"name": "\u9676\u5219\u5b87", "score": 10.0}, {"name": "\u97e9\u7267\u91ce", "score": 10.0}, {"name": "\u6881\u99a8\u60a6", "score": 10.0}, {"name": "\u6731\u79b9\u970f", "score": 10.0}, {"name": "\u8983\u8bd7\u742a", "score": 10.0}, {"name": "\u8c22\u53f8\u4e49", "score": 10.0}, {"name": "\u738b\u714a\u7136", "score": 5.0}, {"name": "\u674e\u827e\u534e", "score": 5.0}, {"name": "\u8428\u68d5\u5cfb", "score": 5.0}];
+        const BAKED_DATA = [{"name": "\u7530\u6167\u99a8", "score": 15.0}, {"name": "\u5362\u9e23\u5c90", "score": 15.0}, {"name": "\u6853\u8363", "score": 15.0}, {"name": "\u6a59\u5b50", "score": 15.0}, {"name": "\u97e6\u4e1c\u8f89", "score": 15.0}, {"name": "\u82a6\u4f73\u94b0", "score": 15.0}, {"name": "\u5f20\u6587\u535a", "score": 15.0}, {"name": "\u6708\u6708", "score": 15.0}, {"name": "\u738b\u7d2b\u6db5", "score": 15.0}, {"name": "\u82d7\u82d7", "score": 15.0}, {"name": "\u8f9c\u7949\u9890", "score": 15.0}, {"name": "\u738b\u4e16\u6cf0", "score": 15.0}, {"name": "\u4e01\u5723\u6069", "score": 15.0}, {"name": "\u9ad8\u7389\u6765", "score": 15.0}, {"name": "\u6d1b\u6d1b", "score": 15.0}, {"name": "\u5218\u9aa5\u548c", "score": 15.0}, {"name": "\u82b1\u6735", "score": 15.0}, {"name": "\u65bd\u656c\u5ead", "score": 15.0}, {"name": "\u777f\u5b81", "score": 15.0}, {"name": "\u5468\u5b50\u887f", "score": 15.0}, {"name": "\u7f57\u5b87\u6052", "score": 15.0}, {"name": "\u6731\u6c38\u665f", "score": 15.0}, {"name": "\u9676\u5219\u5b87", "score": 10.0}, {"name": "\u97e9\u7267\u91ce", "score": 10.0}, {"name": "\u6881\u99a8\u60a6", "score": 10.0}, {"name": "\u6731\u79b9\u970f", "score": 10.0}, {"name": "\u8983\u8bd7\u742a", "score": 10.0}, {"name": "\u8c22\u53f8\u4e49", "score": 10.0}, {"name": "\u738b\u714a\u7136", "score": 5.0}, {"name": "\u674e\u827e\u534e", "score": 5.0}, {"name": "\u8428\u68d5\u5cfb", "score": 5.0}];
 
         let currentDataList = [];
         const rankContainer = document.getElementById('rankContainer');
