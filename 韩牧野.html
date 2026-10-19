@@ -70,7 +70,40 @@
       transition: transform 0.2s;
     }
     .secret-letter:hover { transform: scale(1.1); }
-
+        /* 新增的作业提醒气泡 */
+    .homework-tip {
+      position: fixed;
+      bottom: 28px;
+      right: 80px; /* 放在信封左侧 */
+      background: linear-gradient(135deg, #ff6b6b, #ff4757);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+      z-index: 999;
+      display: none; /* 默认隐藏，有作业时才显示 */
+      animation: pulseTip 1.5s infinite alternate;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    /* 气泡的小尾巴 */
+    .homework-tip::after {
+      content: '';
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-width: 6px 0 6px 8px;
+      border-style: solid;
+      border-color: transparent transparent transparent #ff4757;
+    }
+    /* 气泡上下浮动动画 */
+    @keyframes pulseTip {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-6px); }
+    }
     /* 大图预览样式 */
     .big-image-container {
       display: flex;
@@ -116,7 +149,7 @@
     <div class="forest">
             <!-- 顶部按钮：查看作业情况 -->
       <div style="text-align:center; margin-bottom:16px;">
-        <a href="homework_ranking.html" style="display:inline-block; padding:10px 24px; background:linear-gradient(135deg,#ffb347,#ff8c00); color:white; text-decoration:none; border-radius:30px; font-weight:bold; box-shadow:0 4px 12px rgba(255,140,0,0.4); font-size:15px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        <a href="homework_ranking.html" target="_blank" style="display:inline-block; padding:10px 24px; background:linear-gradient(135deg,#ffb347,#ff8c00); color:white; text-decoration:none; border-radius:30px; font-weight:bold; box-shadow:0 4px 12px rgba(255,140,0,0.4); font-size:15px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
           📋 查看上次课后作业情况
         </a>
       </div>
@@ -140,7 +173,8 @@
         </div>
       </div>
     </div>
-    <!-- 小信箱（课后作业） -->
+        <!-- 小信箱（课后作业） -->
+    <div id="homeworkTip" class="homework-tip" onclick="showHomework()">📬 快来完成课后挑战吧~~</div>
     <div class="secret-letter" onclick="showHomework()">✉️</div>
     <div class="modal" id="fruitModal">
       <div class="modal-card"><span class="modal-close" onclick="closeModal()">&times;</span><div id="modalContent"></div></div>
@@ -150,7 +184,7 @@
 
   <script>
     const pagePwd = "3289";
-    const version = "20261018151347";
+    const version = "20261019141904";
     const eggIcon = "🥚";
     const dinoIcon = "🦕";
     const globalLatestId = 7;
@@ -587,8 +621,15 @@ function showNoteBigImage(url) {
     document.getElementById('modalContent').innerHTML = html;
     document.getElementById('fruitModal').style.display = 'flex';
 }
-    window.addEventListener('load', () => {
-    if ("nan" && "nan" !== "") {
+        window.addEventListener('load', () => {
+      // 👇 判断最新一节课是否有作业链接
+      const currentLessonKey = String(globalLatestId);
+      const currentRecord = lessonHistory[currentLessonKey];
+      if (currentRecord && currentRecord.homework_link) {
+        document.getElementById('homeworkTip').style.display = 'block';
+      }
+
+      if ("nan" && "nan" !== "") {
         bgMusic.load();
         bgMusic.play().then(() => musicPlaying = true).catch(() => {});
       }
