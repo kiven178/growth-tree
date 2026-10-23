@@ -184,7 +184,7 @@
 
   <script>
     const pagePwd = "0609";
-    const version = "20261019141904";
+    const version = "20261023154301";
     const eggIcon = "🌱";
     const dinoIcon = "🌸";
     const globalLatestId = 7;
@@ -366,7 +366,7 @@
         document.getElementById('modalContent').innerHTML = `
           <div style="text-align:center;">
             <h2>📬 课后作业</h2>
-            <p style="margin-top:16px;">当前还没有发布作业，请稍后再来查看。</p>
+            <p style="margin-top:16px;">当前还没有发布作业，请后面再来查看。</p>
           </div>
         `;
         document.getElementById('fruitModal').style.display = 'flex';
@@ -422,15 +422,27 @@
         return;
       }
 
-      let wrongVideosHtml = '';
-      if (detail.wrong_videos && detail.wrong_videos.length > 0) {
+            let wrongVideosHtml = '';
+
+      // 1. 如果包含“待更新”字样（触发我们填 6 的逻辑）
+      if (detail.mistake && detail.mistake.includes('待更新')) {
+        wrongVideosHtml = `<div><strong>📹 错题解析</strong>
+          <div style="text-align:center; margin-top:8px; padding:10px; background:#fff3e0; border-radius:12px; border:1px dashed #ffb347;">
+            <p style="font-weight:bold; color:#e67e22;">${detail.mistake}</p>
+          </div>
+        </div>`;
+      }
+      // 2. 如果有正常的错题视频
+      else if (detail.wrong_videos && detail.wrong_videos.length > 0) {
         const mistakeText = detail.mistake || '有错题，请查看下方解析视频。';
         wrongVideosHtml = `<div><strong>📹 错题解析</strong><p>${mistakeText}</p><div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:8px;">`;
         detail.wrong_videos.forEach(videoPath => {
           wrongVideosHtml += `<video controls width="100%" style="max-width:200px; border-radius:8px;" onerror="this.style.display='none'"><source src="${videoPath}" type="video/mp4">视频加载失败</video>`;
         });
         wrongVideosHtml += `</div></div>`;
-      } else {
+      }
+      // 3. 既没视频也没待更新文字，说明真全对了
+      else {
         wrongVideosHtml = `<div style="text-align:center; margin-top:12px; padding:10px; background:#e8f5e9; border-radius:12px;">
           <span style="font-size:24px;">🎉</span>
           <p style="font-weight:bold; color:#2e7d32;">太棒啦！没有错题，继续保持！</p>
@@ -545,7 +557,7 @@
         learnedDetails.forEach(node => {
           const item = document.createElement('div');
           item.className = 'knowledge-item';
-          item.textContent = `📘 ${node.detail.title}`;
+          item.innerHTML = `📘 <span style="font-size: 12px; background: #ffb347; color: #fff; border-radius: 8px; padding: 1px 6px; margin-right: 6px; font-weight: bold;">第${node.id}课</span> ${node.detail.title}`;
           item.addEventListener('click', () => showLearningRecord(node));
           knowledgeList.appendChild(item);
         });
