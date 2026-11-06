@@ -125,6 +125,88 @@
       padding: 6px 16px;
       border-radius: 20px;
     }
+        /* ====== 跟屁虫精灵样式 ====== */
+    #pet {
+      position: fixed;
+      top: 0; left: 0;
+      width: 46px; height: 46px;
+      background: linear-gradient(135deg, #ffb347, #ff8c00);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 4px 12px rgba(255, 140, 0, 0.4);
+      z-index: 9999;
+      cursor: pointer;
+      will-change: transform, left, top;
+      user-select: none;
+      opacity: 1; /* 初始隐藏，等鼠标动了再出现 */
+      transition: opacity 0.5s ease;
+    }
+
+    /* 精灵呼吸动画 */
+    @keyframes breathing {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+        #pet::after {
+      content: '';
+      position: absolute;
+      top: -15px; left: -15px; right: -15px; bottom: -15px;
+      border-radius: 50%;
+      /* 隐形的大判定框 */
+    }
+        #pet {
+      /* ... 原有代码 ... */
+      animation: floatGlow 2s infinite alternate;
+    }
+    @keyframes floatGlow {
+      0% { box-shadow: 0 4px 12px rgba(255, 140, 0, 0.4); }
+      100% { box-shadow: 0 4px 25px rgba(255, 140, 0, 0.9), 0 0 10px #fff inset; }
+    }
+    /* 对话气泡 */
+    #pet-bubble {
+      position: fixed;
+      background: #fff;
+      border: 2px solid #ff8c00;
+      border-radius: 16px;
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #e67e22;
+      white-space: nowrap;
+      z-index: 9998;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      transform: translate(-50%, 0); /* 保证气泡在精灵正上方 */
+    }
+
+    /* 气泡小尾巴 */
+    #pet-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 8px 8px 0;
+      border-style: solid;
+      border-color: #fff transparent transparent transparent;
+    }
+    #pet-bubble::before {
+      content: '';
+      position: absolute;
+      bottom: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 9px 9px 0;
+      border-style: solid;
+      border-color: #ff8c00 transparent transparent transparent;
+      z-index: -1;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
@@ -181,10 +263,12 @@
     </div>
   </div>
   <audio id="bgMusic" loop src="https://kiven178-growth-tree.oss-cn-chengdu.aliyuncs.com/nan" style="display:none;"></audio>
-
+   <!-- 👇 新增：跟屁虫精灵和气泡 👇 -->
+  <div id="pet"></div>
+  <div id="pet-bubble"></div>
   <script>
     const pagePwd = "5022";
-    const version = "20261106143150";
+    const version = "20261106165046";
     const eggIcon = "🥚";
     const dinoIcon = "🐾";
     const globalLatestId = 9;
@@ -646,6 +730,112 @@ function showNoteBigImage(url) {
         bgMusic.play().then(() => musicPlaying = true).catch(() => {});
       }
       loadMyNotes();
+    });
+        // ========== 跟屁虫精灵逻辑 ==========
+    const pet = document.getElementById('pet');
+    const bubble = document.getElementById('pet-bubble');
+
+    // 根据学生的主题渲染图标
+    pet.innerHTML = dinoIcon;
+
+    let spinSpeed = 0; // 旋转速度
+    let currentSpin = 0; // 当前旋转角度
+    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+    let petX = mouseX, petY = mouseY;
+    let isMoving = false;
+    let moveTimeout;
+
+    // 监听鼠标/手指移动
+    function updateMouse(x, y) {
+      // 让精灵稍微避开鼠标正中心（偏右下30px），防止挡住点击操作
+      mouseX = x + 30;
+      mouseY = y + 30;
+
+      // if (pet.style.opacity === '0') pet.style.opacity = '1';
+
+      isMoving = true;
+      clearTimeout(moveTimeout);
+      moveTimeout = setTimeout(() => isMoving = false, 200); // 200ms不移动则认为停下
+    }
+
+    document.addEventListener('mousemove', (e) => updateMouse(e.clientX, e.clientY));
+    document.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) updateMouse(e.touches[0].clientX, e.touches[0].clientY);
+    }, {passive: true});
+
+    // 物理弹性循环 (60fps)
+    function animatePet() {
+      // 计算距离
+      const dx = mouseX - petX;
+      const dy = mouseY - petY;
+
+      // 核心：弹性系数，0.08 会让它有一种软绵绵拖拽感
+      petX += dx * 0.08;
+      petY += dy * 0.08;
+
+      // 根据水平移动速度计算倾斜角度
+      const tilt = Math.max(-15, Math.min(15, dx * 0.15));
+
+      // ===== 新增：处理旋转和缩放 =====
+      let scale = 1;
+      // 如果正在旋转，速度逐渐衰减
+      if (Math.abs(spinSpeed) > 0.1) {
+        currentSpin += spinSpeed;
+        spinSpeed *= 0.92; // 摩擦系数，让它转几圈后慢慢停下
+        scale = 1.3; // 转的时候变大一点
+      } else {
+        spinSpeed = 0;
+        // 停止旋转后，重置角度为最近的360度倍数，避免它歪着头
+        currentSpin = Math.round(currentSpin / 360) * 360;
+
+        // 鼠标没动时的呼吸效果
+        if (!isMoving) {
+          scale = 1 + Math.sin(Date.now() / 300) * 0.05;
+        }
+      }
+
+      // 更新位置，把旋转角度 currentSpin 和倾斜角度 tilt 加进去
+      pet.style.transform = `translate(${petX - 23}px, ${petY - 23}px) scale(${scale}) rotate(${tilt + currentSpin}deg)`;
+
+      if (bubble.style.opacity === '1') {
+        bubble.style.left = `${petX}px`;
+        bubble.style.top = `${petY - 58}px`;
+      }
+
+      requestAnimationFrame(animatePet);
+    }
+    requestAnimationFrame(animatePet);
+
+    // ========== 点击互动 ==========
+    const phrases = [
+      "别戳啦，好痒！",
+      "快去做作业！",
+      "你今天真棒！",
+      "我是你的专属跟班！",
+      "哇，你发现我了！",
+      "代码改变世界！",
+      "今天学了什么魔法？",
+      "再戳我要生气啦！"
+    ];
+    let bubbleTimeout;
+
+    pet.addEventListener('click', (e) => {
+      e.stopPropagation(); // 防止触发底下的元素
+
+      // 👇 替换成：给一个巨大的初始旋转力（比如一次性转两圈半）
+      spinSpeed = 60;
+
+      // 2. 冒出随机气泡（保留原来的）
+      const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+      bubble.textContent = randomPhrase;
+      bubble.style.opacity = '1';
+      bubble.style.left = `${petX}px`;
+      bubble.style.top = `${petY - 58}px`;
+
+      clearTimeout(bubbleTimeout);
+      bubbleTimeout = setTimeout(() => {
+        bubble.style.opacity = '0';
+      }, 3000); // 3秒后消失
     });
   </script>
 </body>
